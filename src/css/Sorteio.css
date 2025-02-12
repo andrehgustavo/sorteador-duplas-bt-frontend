@@ -1,0 +1,100 @@
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+.btn-sortear, .btn-revelar-todas {
+  margin: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-sortear:hover, .btn-revelar-todas:hover {
+  background-color: #0056b3;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 15px;
+  width: 650px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.btn-revelar {
+  margin: 10px;
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-revelar:hover {
+  background-color: #218838;
+}
+
+.card-dupla {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.card-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-photo {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.player-classification {
+  font-weight: normal;
+  font-size: 16px;
+  color: #555;
+}
+
+.revealed .btn-revelar {
+  display: none;
+}

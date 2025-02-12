@@ -1,0 +1,51 @@
+.container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .form-cadastro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .input-text, .input-select, .input-file {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .input-text:focus, .input-select:focus, .input-file:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .btn-cadastrar {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .btn-cadastrar:hover {
+    background-color: #0056b3;
+  }
+  
+  .mensagem {
+    margin-top: 20px;
+    font-size: 18px;
+    color: green;
+  }
+  
