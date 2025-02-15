@@ -1,8 +1,8 @@
-const API_URL = "http://localhost:8084/sorteador-duplas-bt/api/v1/auth/login"; // Ajuste conforme necessÃ¡rio
+import API_URL from "./config.js"
 
 export async function login(username, password) {
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_URL}/sorteador-duplas-bt/api/v1/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../AuthContext";
 import "../css/Sorteio.css";
+import API_URL from "../config";
 
 const Sorteio = () => {
   const [duplas, setDuplas] = useState([]);
@@ -10,7 +11,7 @@ const Sorteio = () => {
 
   const fetchDuplas = async () => {
     try {
-      const response = await axios.get("http://localhost:8084/sorteador-duplas-bt/api/v1/sorteio/duplas-ativas");
+      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas-ativas`);
       setDuplas(response.data);
       setVisibilidade(new Array(response.data.length).fill(!user)); // Revela todas as duplas para usuários não logados
     } catch (error) {
@@ -24,7 +25,7 @@ const Sorteio = () => {
 
   const realizarSorteio = async () => {
     try {
-      const response = await axios.get("http://localhost:8084/sorteador-duplas-bt/api/v1/sorteio/duplas");
+      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
       setDuplas(response.data);
       setVisibilidade(new Array(response.data.length).fill(false));
     } catch (error) {

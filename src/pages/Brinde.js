@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../AuthContext";
 import "../css/Brinde.css"; // Importando o novo arquivo CSS
+import API_URL from "../config";
 
 const Brinde = () => {
   const [brinde, setBrinde] = useState(null);
@@ -11,7 +12,7 @@ const Brinde = () => {
 
   const fetchBrinde = async () => {
     try {
-        const response = await axios.get("http://localhost:8084/sorteador-duplas-bt/api/v1/sorteio/ganhador-brinde");
+        const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/ganhador-brinde`);
       setBrinde(response.data);
       setVisibilidade(!user);
     } catch (error) {
@@ -25,7 +26,7 @@ const Brinde = () => {
 
   const sortearBrinde = async () => {
     try {
-      const response = await axios.get("http://localhost:8084/sorteador-duplas-bt/api/v1/sorteio/sortear-brinde");
+      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/sortear-brinde`);
       setBrinde(response.data);
       setBrinde(response.data);
       setVisibilidade(false);

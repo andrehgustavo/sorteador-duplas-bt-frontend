@@ -5,6 +5,7 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, Select, InputLabel, FormControl, Input, Avatar 
 } from "@mui/material";
 import AuthContext from "../AuthContext"; // Importe o contexto de autenticação
+import API_URL from "../config";
 
 const ListagemJogadores = () => {
   const [jogadores, setJogadores] = useState([]);
@@ -23,13 +24,13 @@ const ListagemJogadores = () => {
   }, []);
 
   const carregarJogadores = () => {
-    axios.get("http://localhost:8084/sorteador-duplas-bt/api/v1/jogadores")
+    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores`)
       .then(response => setJogadores(response.data))
       .catch(error => console.error("Erro ao carregar jogadores:", error));
   };
 
   const carregarClassificacoes = () => {
-    axios.get("http://localhost:8084/sorteador-duplas-bt/api/v1/classificacoes")
+    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/classificacoes`)
       .then(response => setClassificacoes(response.data))
       .catch(error => console.error("Erro ao carregar classificações:", error));
   };
@@ -37,7 +38,7 @@ const ListagemJogadores = () => {
   const excluirJogador = async (id) => {
     if (window.confirm("Tem certeza que deseja excluir este jogador?")) {
       try {
-        await axios.delete(`http://localhost:8084/sorteador-duplas-bt/api/v1/jogadores/${id}`);
+        await axios.delete(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores/${id}`);
         setMensagem({ text: "Jogador excluído com sucesso!", type: "success" });
         carregarJogadores();
       } catch (error) {
@@ -70,11 +71,11 @@ const ListagemJogadores = () => {
       }
       
       if (jogadorEditando.id) {
-        await axios.put(`http://localhost:8084/sorteador-duplas-bt/api/v1/jogadores/${jogadorEditando.id}`, formData, {
+        await axios.put(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores/${jogadorEditando.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        await axios.post("http://localhost:8084/sorteador-duplas-bt/api/v1/jogadores", formData, {
+        await axios.post("${API_URL}/sorteador-duplas-bt/api/v1/jogadores", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }

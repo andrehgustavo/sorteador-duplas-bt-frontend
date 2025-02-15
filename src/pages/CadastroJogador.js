@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/CadastroJogador.css";
+import API_URL from "../config";
 
 const CadastroJogador = () => {
   const [nome, setNome] = useState("");
@@ -10,7 +11,7 @@ const CadastroJogador = () => {
   const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8084/sorteador-duplas-bt/api/v1/classificacoes")
+    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/classificacoes`)
       .then(response => setClassificacoes(response.data))
       .catch(error => console.error("Erro ao buscar classificações:", error));
   }, []);
@@ -25,7 +26,7 @@ const CadastroJogador = () => {
     }
 
     try {
-      await axios.post("http://localhost:8084/sorteador-duplas-bt/api/v1/jogadores", formData, {
+      await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMensagem("Jogador cadastrado com sucesso!");
