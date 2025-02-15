@@ -31,12 +31,13 @@
   border: 1px solid #dee2e6;
   border-radius: 10px;
   padding: 15px;
-  width: 650px;
+  width: 650px;  /* Tamanho fixo para telas grandes */
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   cursor: pointer;
   transition: transform 0.3s;
+  max-width: 100%; /* Responsividade para ajustar em telas menores */
 }
 
 .card:hover {
@@ -68,17 +69,19 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .card-player {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 10px;
 }
 
 .player-photo {
-  width: 300px;
-  height: 300px;
+  width: 250px; /* Tamanho ajustado */
+  height: 250px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 10px;
@@ -86,15 +89,50 @@
 
 .player-name {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .player-classification {
   font-weight: normal;
-  font-size: 16px;
+  font-size: 14px;
   color: #555;
 }
 
 .revealed .btn-revelar {
   display: none;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 768px) {
+  .card {
+    width: 100%; /* Card ocupa toda a largura da tela em dispositivos móveis */
+    max-width: 500px; /* Limita o tamanho máximo */
+    padding: 10px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+
+  .player-photo {
+    width: 150px; /* Ajuste do tamanho da foto */
+    height: 150px;
+  }
+
+  .player-name {
+    font-size: 16px;
+  }
+
+  .player-classification {
+    font-size: 12px;
+  }
+
+  .btn-sortear, .btn-revelar-todas, .btn-verificar, .btn-revelar {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .cards-container {
+    gap: 15px;
+  }
 }

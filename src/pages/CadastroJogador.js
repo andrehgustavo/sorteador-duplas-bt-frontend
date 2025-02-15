@@ -4,6 +4,7 @@ import "../css/CadastroJogador.css";
 import API_URL from "../config";
 
 const CadastroJogador = () => {
+  const [jogadores, setJogadores] = useState([]);
   const [nome, setNome] = useState("");
   const [classificacaoId, setClassificacaoId] = useState("");
   const [foto, setFoto] = useState(null);
@@ -14,6 +15,11 @@ const CadastroJogador = () => {
     axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/classificacoes`)
       .then(response => setClassificacoes(response.data))
       .catch(error => console.error("Erro ao buscar classificações:", error));
+
+    // Fetch jogadores
+    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores`)
+      .then(response => setJogadores(response.data))
+      .catch(error => console.error("Erro ao buscar jogadores:", error));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -72,6 +78,26 @@ const CadastroJogador = () => {
         <button type="submit" className="btn-cadastrar">Cadastrar</button>
       </form>
       {mensagem && <p className="mensagem">{mensagem}</p>}
+
+      <h3>Jogadores Cadastrados</h3>
+      <table className="tabela-jogadores">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>Nome</th>
+            <th>Classificação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {jogadores.map((jogador) => (
+            <tr key={jogador.id}>
+              <td><img src={`data:image/jpeg;base64,${jogador.foto}`} alt={jogador.nome} /></td>
+              <td>{jogador.nome}</td>
+              <td>{jogador.classificacao.descricao}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

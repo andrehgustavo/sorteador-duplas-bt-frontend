@@ -119,56 +119,47 @@ const ListagemJogadores = () => {
         </Button>
       )}
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell><strong>Foto</strong></TableCell>
-              <TableCell><strong>Nome</strong></TableCell>
-              <TableCell><strong>Classificação</strong></TableCell>
-              {isAuthenticated && <TableCell align="center"><strong>Ações</strong></TableCell>}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {jogadoresFiltrados.length > 0 ? (
-              jogadoresFiltrados.map(jogador => (
-                <TableRow key={jogador.id}>
-                  <TableCell>
-                    {jogador.foto && <Avatar src={`data:image/jpeg;base64,${jogador.foto}`} />}
-                  </TableCell>
-                  <TableCell>{jogador.nome}</TableCell>
-                  <TableCell>{jogador.classificacao.descricao}</TableCell>
-                  {isAuthenticated && (
-                    <TableCell align="center">
-                      <Button 
-                        variant="contained" 
-                        color="primary" 
-                        sx={{ mr: 1 }}
-                        onClick={() => abrirModalEdicao(jogador)}
-                      >
-                        Editar
-                      </Button>
-                      <Button 
-                        variant="contained" 
-                        color="error" 
-                        onClick={() => excluirJogador(jogador.id)}
-                      >
-                        Excluir
-                      </Button>
-                    </TableCell>
-                  )}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={isAuthenticated ? 4 : 3} align="center">
-                  Nenhum jogador encontrado.
+    <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+      <Table sx={{ minWidth: 600 }}>
+        <TableHead>
+          <TableRow>
+            <TableCell><strong>Foto</strong></TableCell>
+            <TableCell><strong>Nome</strong></TableCell>
+            <TableCell><strong>Classificação</strong></TableCell>
+            {isAuthenticated && <TableCell align="center"><strong>Ações</strong></TableCell>}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {jogadoresFiltrados.length > 0 ? (
+            jogadoresFiltrados.map(jogador => (
+              <TableRow key={jogador.id}>
+                <TableCell>
+                  {jogador.foto && <Avatar src={`data:image/jpeg;base64,${jogador.foto}`} />}
                 </TableCell>
+                <TableCell>{jogador.nome}</TableCell>
+                <TableCell>{jogador.classificacao.descricao}</TableCell>
+                {isAuthenticated && (
+                  <TableCell align="center" sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    <Button variant="contained" color="primary" size="small" onClick={() => abrirModalEdicao(jogador)}>
+                      Editar
+                    </Button>
+                    <Button variant="contained" color="error" size="small" onClick={() => excluirJogador(jogador.id)}>
+                      Excluir
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={isAuthenticated ? 4 : 3} align="center">
+                Nenhum jogador encontrado.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
 
       <Dialog open={!!jogadorEditando} onClose={fecharModalEdicao}>
         <DialogTitle>{jogadorEditando?.id ? "Editar Jogador" : "Adicionar Jogador"}</DialogTitle>

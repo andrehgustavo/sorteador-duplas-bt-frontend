@@ -1,5 +1,5 @@
+import { useState, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import AuthContext, { AuthProvider } from "./AuthContext";
 import Sorteio from "./pages/Sorteio";
 import ListagemJogadores from "./pages/ListagemJogadores";
@@ -35,17 +35,27 @@ function App() {
 const MainApp = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <>
       <header className="header">
         <img src={logo} alt="II Maduro Open de BT" className="logo" />
-        <nav className="nav">
+        <div className="hamburger" onClick={toggleMenu}>
+          <div className="line"></div>
+          <div className="line"></div>
+          <div className="line"></div>
+        </div>
+        <nav className={`nav ${menuOpen ? "active" : ""}`}>
           <Link to="/" className="nav-link">Sorteio de Duplas</Link>
           <Link to="/brinde" className="nav-link">Sorteio de Brindes</Link>
           <Link to="/listagem" className="nav-link">Lista de Jogadores</Link>
