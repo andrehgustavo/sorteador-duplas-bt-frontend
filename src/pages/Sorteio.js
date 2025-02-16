@@ -11,11 +11,24 @@ const Sorteio = () => {
 
   const fetchDuplas = async () => {
     try {
-      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas-ativas`);
+      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
       setDuplas(response.data);
       setVisibilidade(new Array(response.data.length).fill(!user)); // Revela todas as duplas para usuários não logados
     } catch (error) {
       console.error("Erro ao buscar duplas sorteadas:", error);
+    }
+  };
+
+  const apagarTodasDuplas = async () => {
+    if (window.confirm("Tem certeza que deseja apagar todas as duplas?")) {
+      try {
+        await axios.delete(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
+        setDuplas([]);
+        setVisibilidade([]);
+        console.log("Todas as duplas foram apagadas com sucesso.");
+      } catch (error) {
+        console.error("Erro ao apagar todas as duplas:", error);
+      }
     }
   };
 
@@ -25,7 +38,7 @@ const Sorteio = () => {
 
   const realizarSorteio = async () => {
     try {
-      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
+      const response = await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
       setDuplas(response.data);
       setVisibilidade(new Array(response.data.length).fill(false));
     } catch (error) {
@@ -58,6 +71,9 @@ const Sorteio = () => {
           <button onClick={revelarTodas} className="btn-revelar-todas">
             Revelar Todas as Duplas
           </button>
+          <button onClick={apagarTodasDuplas} className="btn-apagar-todas">
+            Apagar Todas as Duplas
+          </button>
         </>
       )}
       {!user && (
@@ -74,12 +90,12 @@ const Sorteio = () => {
               {visibilidade[index] && (
                 <div className="card-dupla">
                   <div className="card-player">
-                    {dupla[0].foto && <img src={`data:image/jpeg;base64,${dupla[0].foto}`} alt={`${dupla[0].nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla[0].nome} <span className="player-classification">({dupla[0].classificacao.descricao})</span></p>
+                    {dupla.jogador1.foto && <img src={`data:image/jpeg;base64,${dupla.jogador1.foto}`} alt={`${dupla.jogador1.nome} Foto`} className="player-photo" />}
+                    <p className="player-name">{dupla.jogador1.nome} <span className="player-classification">({dupla.jogador1.classificacao.descricao})</span></p>
                   </div>
                   <div className="card-player">
-                    {dupla[1].foto && <img src={`data:image/jpeg;base64,${dupla[1].foto}`} alt={`${dupla[1].nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla[1].nome} <span className="player-classification">({dupla[1].classificacao.descricao})</span></p>
+                    {dupla.jogador2.foto && <img src={`data:image/jpeg;base64,${dupla.jogador2.foto}`} alt={`${dupla.jogador2.nome} Foto`} className="player-photo" />}
+                    <p className="player-name">{dupla.jogador2.nome} <span className="player-classification">({dupla.jogador2.classificacao.descricao})</span></p>
                   </div>
                 </div>
               )}
@@ -91,6 +107,7 @@ const Sorteio = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Sorteio;

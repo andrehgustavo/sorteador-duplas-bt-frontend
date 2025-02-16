@@ -49,7 +49,7 @@ const MainApp = () => {
   return (
     <>
       <header className="header">
-        <img src={logo} alt="II Maduro Open de BT" className="logo" />
+        <Link to="/" className="nav-link"><img src={logo} alt="II Maduro Open de BT" className="logo" /></Link>
         <div className="hamburger" onClick={toggleMenu}>
           <div className="line"></div>
           <div className="line"></div>

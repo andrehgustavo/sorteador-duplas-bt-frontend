@@ -3,7 +3,7 @@
   padding: 20px;
 }
 
-.btn-sortear, .btn-revelar-todas {
+.btn-sortear, .btn-verificar {
   margin: 10px;
   padding: 10px;
   background-color: #007bff;
@@ -14,8 +14,23 @@
   font-size: 16px;
 }
 
-.btn-sortear:hover, .btn-revelar-todas:hover {
+.btn-sortear:hover, .btn-verificar:hover {
   background-color: #0056b3;
+}
+
+.btn-revelar-todas {
+  margin: 10px;
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-revelar-todas:hover {
+  background-color: #218838;
 }
 
 .cards-container {
@@ -102,6 +117,21 @@
   display: none;
 }
 
+.btn-apagar-todas {
+  margin: 10px;
+  padding: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-apagar-todas:hover {
+  background-color: #c82333; /* Vermelho mais escuro */
+}
+
 /* Responsividade para telas pequenas */
 @media (max-width: 768px) {
   .card {
@@ -127,10 +157,24 @@
     font-size: 12px;
   }
 
-  .btn-sortear, .btn-revelar-todas, .btn-verificar, .btn-revelar {
+  .btn-sortear, .btn-revelar-todas, .btn-verificar, .btn-revelar{
     font-size: 14px;
     padding: 8px;
   }
+
+  .btn-apagar-todas {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-apagar-todas:hover {
+    background-color: #c82333; /* Vermelho mais escuro */
+  }
+  
 
   .cards-container {
     gap: 15px;

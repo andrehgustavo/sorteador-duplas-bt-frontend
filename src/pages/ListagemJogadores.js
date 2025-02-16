@@ -2,10 +2,12 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { 
   Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Snackbar, Alert, 
-  Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, Select, InputLabel, FormControl, Input, Avatar 
+  Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, Select, InputLabel, FormControl, Input, Avatar,
+  Checkbox, Tooltip  
 } from "@mui/material";
 import AuthContext from "../AuthContext"; // Importe o contexto de autenticação
 import API_URL from "../config";
+import "../css/ListagemJogadores.css"; // Importe o arquivo CSS
 
 const ListagemJogadores = () => {
   const [jogadores, setJogadores] = useState([]);
@@ -15,8 +17,7 @@ const ListagemJogadores = () => {
   const [filtro, setFiltro] = useState("");
   const [foto, setFoto] = useState(null);
   const { isAuthenticated } = useContext(AuthContext); // Obtém o estado de autenticação
-  console.log('isAuthenticated:', isAuthenticated);
-
+  const [selecionarTodos, setSelecionarTodos] = useState(false);
 
   useEffect(() => {
     carregarJogadores();
@@ -60,6 +61,48 @@ const ListagemJogadores = () => {
   const handleFileChange = (event) => {
     setFoto(event.target.files[0]);
   };
+
+  const atualizarParticipacaoBrinde = async (jogador) => {
+    const jogadorAtualizado = { ...jogador, participaBrinde: !jogador.participaBrinde };
+  
+    try {
+      await axios.patch(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores/atualizarParticipacaoBrinde`, [jogadorAtualizado], {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      setJogadores(jogadores.map(j => 
+        j.id === jogador.id ? jogadorAtualizado : j
+      ));
+    } catch (error) {
+      console.error("Erro ao atualizar participação no brinde:", error);
+    }
+  };
+
+  const alternarSelecaoTodos = async () => {
+    const novoEstado = !selecionarTodos;
+    setSelecionarTodos(novoEstado);
+  
+    const jogadoresAtualizados = jogadores.map(jogador => ({
+      ...jogador,
+      participaBrinde: novoEstado
+    }));
+  
+    try {
+      await axios.patch(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores/atualizarParticipacaoBrinde`, jogadoresAtualizados, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      setJogadores(jogadoresAtualizados);
+    } catch (error) {
+      console.error("Erro ao atualizar participação no brinde para todos os jogadores:", error);
+    }
+  };
+  
+  
 
   const salvarEdicao = async () => {
     try {
@@ -121,14 +164,29 @@ const ListagemJogadores = () => {
 
     <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
       <Table sx={{ minWidth: 600 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Foto</strong></TableCell>
-            <TableCell><strong>Nome</strong></TableCell>
-            <TableCell><strong>Classificação</strong></TableCell>
-            {isAuthenticated && <TableCell align="center"><strong>Ações</strong></TableCell>}
-          </TableRow>
-        </TableHead>
+      <TableHead>
+        <TableRow>
+          <TableCell><strong>Foto</strong></TableCell>
+          <TableCell><strong>Nome</strong></TableCell>
+          <TableCell><strong>Classificação</strong></TableCell>
+          {isAuthenticated && (
+            <>
+              <TableCell align="center">
+                <Tooltip title="Marcar/Desmarcar todos">
+                  <Checkbox
+                    checked={selecionarTodos}
+                    onChange={alternarSelecaoTodos}
+                  />
+                </Tooltip>
+                <Typography variant="body2" component="span">
+                  <strong>Participa Brinde?</strong>
+                </Typography>
+              </TableCell>
+              <TableCell align="center"><strong>Ações</strong></TableCell>
+            </>
+          )}
+        </TableRow>
+      </TableHead>
         <TableBody>
           {jogadoresFiltrados.length > 0 ? (
             jogadoresFiltrados.map(jogador => (
@@ -139,20 +197,28 @@ const ListagemJogadores = () => {
                 <TableCell>{jogador.nome}</TableCell>
                 <TableCell>{jogador.classificacao.descricao}</TableCell>
                 {isAuthenticated && (
-                  <TableCell align="center" sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                    <Button variant="contained" color="primary" size="small" onClick={() => abrirModalEdicao(jogador)}>
-                      Editar
-                    </Button>
-                    <Button variant="contained" color="error" size="small" onClick={() => excluirJogador(jogador.id)}>
-                      Excluir
-                    </Button>
-                  </TableCell>
+                  <>
+                    <TableCell align="center">
+                      <Checkbox
+                        checked={jogador.participaBrinde}
+                        onChange={() => atualizarParticipacaoBrinde(jogador)}
+                      />
+                    </TableCell>
+                    <TableCell align="center" className="action-buttons">
+                      <Button variant="contained" color="primary" size="small" onClick={() => abrirModalEdicao(jogador)}>
+                        Editar
+                      </Button>
+                      <Button variant="contained" color="error" size="small" onClick={() => excluirJogador(jogador.id)}>
+                        Excluir
+                      </Button>
+                    </TableCell>
+                  </>
                 )}
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={isAuthenticated ? 4 : 3} align="center">
+              <TableCell colSpan={isAuthenticated ? 6 : 3} align="center">
                 Nenhum jogador encontrado.
               </TableCell>
             </TableRow>
