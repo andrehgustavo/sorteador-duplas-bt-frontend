@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 import AuthContext from "../AuthContext";
 import "../css/Sorteio.css";
 import API_URL from "../config";
@@ -8,6 +9,7 @@ const Sorteio = () => {
   const [duplas, setDuplas] = useState([]);
   const [visibilidade, setVisibilidade] = useState([]);
   const { user } = useContext(AuthContext);
+  const apenasAdminRealizarSorteio = process.env.REACT_APP_APENAS_ADMIN_REALIZAR_SORTEIO === 'true';
 
   const fetchDuplas = async () => {
     try {
@@ -60,10 +62,19 @@ const Sorteio = () => {
     setVisibilidade(new Array(duplas.length).fill(true));
   };
 
+  const formatarTimestamp = (timestamp) => {
+    return moment(timestamp).format('DD/MM/YYYY HH:mm:ss');
+  };
+
   return (
     <div className="container">
       <h2>Sorteio de Duplas</h2>
-      {user && (
+      {duplas.length > 0 && (
+        <p className="sorteio-timestamp">
+          Sorteio realizado em: {formatarTimestamp(duplas[0].timestamp)}
+        </p>
+      )}
+      {(!apenasAdminRealizarSorteio || user) && (
         <>
           <button onClick={realizarSorteio} className="btn-sortear">
             Sortear Todos
@@ -76,7 +87,7 @@ const Sorteio = () => {
           </button>
         </>
       )}
-      {!user && (
+      {!user && apenasAdminRealizarSorteio && (
         <button onClick={verificarNovoSorteio} className="btn-verificar">
           Verificar Novos Sorteios
         </button>
@@ -107,7 +118,6 @@ const Sorteio = () => {
       </div>
     </div>
   );
-  
 };
 
 export default Sorteio;
