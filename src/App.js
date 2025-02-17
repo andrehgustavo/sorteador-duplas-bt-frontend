@@ -49,16 +49,16 @@ const MainApp = () => {
   return (
     <>
       <header className="header">
-        <Link to="/" className="nav-link"><img src={logo} alt="II Maduro Open de BT" className="logo" /></Link>
+        <Link to="/sorteador-duplas-bt-frontend" className="nav-link"><img src={logo} alt="II Maduro Open de BT" className="logo" /></Link>
         <div className="hamburger" onClick={toggleMenu}>
           <div className="line"></div>
           <div className="line"></div>
           <div className="line"></div>
         </div>
         <nav className={`nav ${menuOpen ? "active" : ""}`}>
-          <Link to="/" className="nav-link">Sorteio de Duplas</Link>
-          <Link to="/brinde" className="nav-link">Sorteio de Brindes</Link>
-          <Link to="/listagem" className="nav-link">Lista de Jogadores</Link>
+          <Link to="/sorteador-duplas-bt-frontend/duplas" className="nav-link">Sorteio de Duplas</Link>
+          <Link to="/sorteador-duplas-bt-frontend/brinde" className="nav-link">Sorteio de Brindes</Link>
+          <Link to="/sorteador-duplas-bt-frontend/listagem" className="nav-link">Lista de Jogadores</Link>
         </nav>
         <div className="auth-section">
           {user ? (
@@ -67,17 +67,17 @@ const MainApp = () => {
               <button className="logout-btn" onClick={handleLogout}>Sair</button>
             </>
           ) : (
-            <Link to="/login" className="nav-link">Login</Link>
+            <Link to="/sorteador-duplas-bt-frontend/login" className="nav-link">Login</Link>
           )}
         </div>
       </header>
       <main className="main">
         <img src={logo} alt="Marca d'Água" className="watermark" />
         <Routes>
-          <Route path="/" element={<Sorteio />} />
-          <Route path="/brinde" element={<Brinde />} />
-          <Route path="/listagem" element={<ListagemJogadores />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/sorteador-duplas-bt-frontend/duplas" element={<Sorteio />} />
+          <Route path="/sorteador-duplas-bt-frontend/brinde" element={<Brinde />} />
+          <Route path="/sorteador-duplas-bt-frontend/listagem" element={<ListagemJogadores />} />
+          <Route path="/sorteador-duplas-bt-frontend/login" element={<Login />} />
         </Routes>
       </main>
     </>
