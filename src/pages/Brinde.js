@@ -4,7 +4,7 @@ import AuthContext from "../AuthContext";
 import "../css/Brinde.css"; // Importando o novo arquivo CSS
 import API_URL from "../config";
 
-const Brinde = () => {
+const Brinde = ({ idCampeonato }) => {
   const [brinde, setBrinde] = useState(null);
   const [visibilidade, setVisibilidade] = useState(false);
   const [countdown, setCountdown] = useState(null);
@@ -26,7 +26,7 @@ const Brinde = () => {
 
   const sortearBrinde = async () => {
     try {
-      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/sortear-brinde`);
+      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/${idCampeonato}/sortear-brinde`);
       setBrinde(response.data);
       setBrinde(response.data);
       setVisibilidade(false);
@@ -76,8 +76,8 @@ const Brinde = () => {
             {countdown !== null && <div className="brinde-countdown">{countdown}</div>}
             {visibilidade && (
               <div className="brinde-card-brinde">
-                {brinde.foto && <img src={brinde.fotoUrl} alt={`${brinde.nome} Foto`} className="brinde-photo" />}
-                <p className="brinde-name">{brinde.nome}</p>
+                {brinde.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${brinde.jogador.fotoUrl}`} alt={`${brinde.jogador.nome} Foto`} className="brinde-photo" />}
+                <p className="brinde-name">{brinde.jogador.nome}</p>
               </div>
             )}
           </div>
