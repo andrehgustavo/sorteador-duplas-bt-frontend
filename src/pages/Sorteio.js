@@ -101,11 +101,11 @@ const Sorteio = () => {
               {visibilidade[index] && (
                 <div className="card-dupla">
                   <div className="card-player">
-                    {dupla.jogador1.foto && <img src={`data:image/jpeg;base64,${dupla.jogador1.foto}`} alt={`${dupla.jogador1.nome} Foto`} className="player-photo" />}
+                    {dupla.jogador1.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.jogador1.fotoUrl}`} alt={`${dupla.jogador1.nome} Foto`} className="player-photo" />}
                     <p className="player-name">{dupla.jogador1.nome} <span className="player-classification">({dupla.jogador1.classificacao.descricao})</span></p>
                   </div>
                   <div className="card-player">
-                    {dupla.jogador2.foto && <img src={`data:image/jpeg;base64,${dupla.jogador2.foto}`} alt={`${dupla.jogador2.nome} Foto`} className="player-photo" />}
+                    {dupla.jogador2.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.jogador2.fotoUrl}`} alt={`${dupla.jogador2.nome} Foto`} className="player-photo" />}
                     <p className="player-name">{dupla.jogador2.nome} <span className="player-classification">({dupla.jogador2.classificacao.descricao})</span></p>
                   </div>
                 </div>

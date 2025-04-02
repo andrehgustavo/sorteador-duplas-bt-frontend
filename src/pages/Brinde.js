@@ -76,7 +76,7 @@ const Brinde = () => {
             {countdown !== null && <div className="brinde-countdown">{countdown}</div>}
             {visibilidade && (
               <div className="brinde-card-brinde">
-                {brinde.foto && <img src={`data:image/jpeg;base64,${brinde.foto}`} alt={`${brinde.nome} Foto`} className="brinde-photo" />}
+                {brinde.foto && <img src={brinde.fotoUrl} alt={`${brinde.nome} Foto`} className="brinde-photo" />}
                 <p className="brinde-name">{brinde.nome}</p>
               </div>
             )}

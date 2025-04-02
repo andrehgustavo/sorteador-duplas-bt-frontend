@@ -91,7 +91,7 @@ const CadastroJogador = () => {
         <tbody>
           {jogadores.map((jogador) => (
             <tr key={jogador.id}>
-              <td><img src={`data:image/jpeg;base64,${jogador.foto}`} alt={jogador.nome} /></td>
+              <td><img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${jogador.fotoUrl}`} alt={jogador.nome} className="foto-jogador" /></td>
               <td>{jogador.nome}</td>
               <td>{jogador.classificacao.descricao}</td>
             </tr>

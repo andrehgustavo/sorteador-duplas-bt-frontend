@@ -118,7 +118,7 @@ const ListagemJogadores = () => {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        await axios.post("${API_URL}/sorteador-duplas-bt/api/v1/jogadores", formData, {
+        await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }
@@ -192,7 +192,7 @@ const ListagemJogadores = () => {
             jogadoresFiltrados.map(jogador => (
               <TableRow key={jogador.id}>
                 <TableCell>
-                  {jogador.foto && <Avatar src={`data:image/jpeg;base64,${jogador.foto}`} />}
+                  {jogador.fotoUrl && <Avatar src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${jogador.fotoUrl}`} />}
                 </TableCell>
                 <TableCell>{jogador.nome}</TableCell>
                 <TableCell>{jogador.classificacao.descricao}</TableCell>
