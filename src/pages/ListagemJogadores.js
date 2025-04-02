@@ -9,7 +9,7 @@ import AuthContext from "../AuthContext"; // Importe o contexto de autenticaçã
 import API_URL from "../config";
 import "../css/ListagemJogadores.css"; // Importe o arquivo CSS
 
-const ListagemJogadores = () => {
+const ListagemJogadores = ({idCampeonato}) => {
   const [jogadores, setJogadores] = useState([]);
   const [classificacoes, setClassificacoes] = useState([]);
   const [mensagem, setMensagem] = useState({ text: "", type: "success" });

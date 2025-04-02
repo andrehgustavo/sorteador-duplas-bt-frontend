@@ -5,7 +5,7 @@ import AuthContext from "../AuthContext";
 import "../css/Sorteio.css";
 import API_URL from "../config";
 
-const Sorteio = () => {
+const Sorteio = ({ idCampeonato }) => {
   const [duplas, setDuplas] = useState([]);
   const [visibilidade, setVisibilidade] = useState([]);
   const { user } = useContext(AuthContext);
@@ -13,7 +13,7 @@ const Sorteio = () => {
 
   const fetchDuplas = async () => {
     try {
-      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
+      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/${idCampeonato}/duplas`);
       setDuplas(response.data);
       setVisibilidade(new Array(response.data.length).fill(!user)); // Revela todas as duplas para usuários não logados
     } catch (error) {
@@ -24,7 +24,7 @@ const Sorteio = () => {
   const apagarTodasDuplas = async () => {
     if (window.confirm("Tem certeza que deseja apagar todas as duplas?")) {
       try {
-        await axios.delete(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
+        await axios.delete(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/${idCampeonato}/duplas`);
         setDuplas([]);
         setVisibilidade([]);
         console.log("Todas as duplas foram apagadas com sucesso.");
@@ -40,7 +40,7 @@ const Sorteio = () => {
 
   const realizarSorteio = async () => {
     try {
-      const response = await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/duplas`);
+      const response = await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/${idCampeonato}/duplas`);
       setDuplas(response.data);
       setVisibilidade(new Array(response.data.length).fill(false));
     } catch (error) {
@@ -101,12 +101,12 @@ const Sorteio = () => {
               {visibilidade[index] && (
                 <div className="card-dupla">
                   <div className="card-player">
-                    {dupla.jogador1.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.jogador1.fotoUrl}`} alt={`${dupla.jogador1.nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla.jogador1.nome} <span className="player-classification">({dupla.jogador1.classificacao.descricao})</span></p>
+                    {dupla.inscricao1.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.inscricao1.jogador.fotoUrl}`} alt={`${dupla.inscricao1.jogador.nome} Foto`} className="player-photo" />}
+                    <p className="player-name">{dupla.inscricao1.jogador.nome} <span className="player-classification">({dupla.inscricao1.jogador.classificacao.descricao})</span></p>
                   </div>
                   <div className="card-player">
-                    {dupla.jogador2.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.jogador2.fotoUrl}`} alt={`${dupla.jogador2.nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla.jogador2.nome} <span className="player-classification">({dupla.jogador2.classificacao.descricao})</span></p>
+                    {dupla.inscricao2.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.inscricao2.jogador.fotoUrl}`} alt={`${dupla.inscricao2.jogador.nome} Foto`} className="player-photo" />}
+                    <p className="player-name">{dupla.inscricao2.jogador.nome} <span className="player-classification">({dupla.inscricao2.jogador.classificacao.descricao})</span></p>
                   </div>
                 </div>
               )}
