@@ -134,7 +134,7 @@ const ListagemInscricao = ({idCampeonato}) => {
 
   const inscricoesFiltradas = inscricoes.filter(inscricao =>
     inscricao.jogador.nome.toLowerCase().includes(filtro.toLowerCase()) ||
-    inscricao.jogador.classificacao.descricao.toLowerCase().includes(filtro.toLowerCase())
+    inscricao.classificacao.descricao.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
@@ -195,7 +195,7 @@ const ListagemInscricao = ({idCampeonato}) => {
                   {inscricao.jogador.fotoUrl && <Avatar src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${inscricao.jogador.fotoUrl}`} />}
                 </TableCell>
                 <TableCell>{inscricao.jogador.nome}</TableCell>
-                <TableCell>{inscricao.jogador.classificacao.descricao}</TableCell>
+                <TableCell>{inscricao.classificacao.descricao}</TableCell>
                 {isAuthenticated && (
                   <>
                     <TableCell align="center">
@@ -241,7 +241,7 @@ const ListagemInscricao = ({idCampeonato}) => {
           <FormControl fullWidth margin="dense">
             <InputLabel>Classificação</InputLabel>
             <Select
-              value={inscricaoEditando?.jogador.classificacao.id || ""}
+              value={inscricaoEditando?.classificacao.id || ""}
               onChange={(e) => setInscricaoEditando({ 
                 ...inscricaoEditando, 
                 classificacao: classificacoes.find(c => c.id === e.target.value) 
