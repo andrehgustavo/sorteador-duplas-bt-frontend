@@ -107,11 +107,58 @@ const ListagemJogadores = ({ idCampeonato }) => {
     }
   };
 
-  const inscreverBatelada = () => {
-    const jogadoresSelecionados = jogadores.filter(jogador => jogador.selecionado);
-    console.log("Inscrição em batelada:", jogadoresSelecionados);
-    // Implementar lógica de inscrição em massa no backend
+  const inscreverBatelada = async () => {
+    const jogadoresSelecionados = jogadores
+      .filter(jogador => jogador.selecionado)
+      .map(jogador => ({
+        jogadorId: jogador.id,
+        classificacaoId: jogador.classificacao
+      }));
+      console.log("Payload enviado:", JSON.stringify(jogadoresSelecionados, null, 2));
+    try {
+      const response = await axios.patch(
+        `${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/campeonato/${idCampeonato}`,
+        jogadoresSelecionados,
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+  
+      const { inscricoesSucesso, erros } = response.data;
+  
+      const mensagensSucesso = inscricoesSucesso.map(i => `✅ ${i.nomeJogador} inscrito com sucesso!`);
+      const mensagensErro = erros.map(erro => `❌ ${erro.nomeJogador}: ${erro.mensagem}`);
+  
+      const todasMensagens = [...mensagensSucesso, ...mensagensErro].join("\n");
+  
+      setMensagem({
+        text: todasMensagens,
+        type: erros.length > 0 ? "warning" : "success"
+      });
+    } catch (error) {
+      setMensagem({
+        text: error.response?.data?.message || "Erro ao realizar inscrições.",
+        type: "error"
+      });
+    }
+  
     fecharModalBatelada();
+  };
+
+  const inscreverIndividual = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("jogadorId", jogadorInscricao.id);
+      formData.append("classificacaoId", jogadorInscricao.classificacao);
+      
+      await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/campeonato/${idCampeonato}`, formData,  {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setMensagem({ text: "Jogador inscrito com sucesso!", type: "success" });
+    } catch (error) {
+      setMensagem({ text: error.response.data.message, type: "error" });
+    }
+    fecharModalInscricaoIndividual();
   };
 
   const jogadoresFiltrados = jogadores.filter(jogador =>
@@ -286,15 +333,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={fecharModalInscricaoIndividual} color="error">Cancelar</Button>
-          <Button
-            onClick={() => {
-              console.log("Confirmando inscrição para:", jogadorInscricao);
-              fecharModalInscricaoIndividual();
-            }}
-            color="primary"
-          >
-            Confirmar Inscrição
-          </Button>
+          <Button onClick={inscreverIndividual} color="primary">Confirmar Inscrição</Button>
         </DialogActions>
       </Dialog>
 
@@ -329,6 +368,19 @@ const ListagemJogadores = ({ idCampeonato }) => {
           <Button onClick={inscreverBatelada} color="primary">Inscrever</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar 
+        open={!!mensagem.text} 
+        autoHideDuration={6000} 
+        onClose={() => setMensagem({ text: "", type: "success" })}
+      >
+        <Alert 
+          onClose={() => setMensagem({ text: "", type: "success" })} 
+          severity={mensagem.type}
+          sx={{ whiteSpace: 'pre-line' }} // habilita quebra de linha
+        >
+          {mensagem.text}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
