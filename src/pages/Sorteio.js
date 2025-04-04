@@ -102,11 +102,11 @@ const Sorteio = ({ idCampeonato }) => {
                 <div className="card-dupla">
                   <div className="card-player">
                     {dupla.inscricao1.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.inscricao1.jogador.fotoUrl}`} alt={`${dupla.inscricao1.jogador.nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla.inscricao1.jogador.nome} <span className="player-classification">({dupla.inscricao1.jogador.classificacao.descricao})</span></p>
+                    <p className="player-name">{dupla.inscricao1.jogador.nome} <span className="player-classification">({dupla.inscricao1.classificacao.descricao})</span></p>
                   </div>
                   <div className="card-player">
                     {dupla.inscricao2.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.inscricao2.jogador.fotoUrl}`} alt={`${dupla.inscricao2.jogador.nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla.inscricao2.jogador.nome} <span className="player-classification">({dupla.inscricao2.jogador.classificacao.descricao})</span></p>
+                    <p className="player-name">{dupla.inscricao2.jogador.nome} <span className="player-classification">({dupla.inscricao2.classificacao.descricao})</span></p>
                   </div>
                 </div>
               )}
