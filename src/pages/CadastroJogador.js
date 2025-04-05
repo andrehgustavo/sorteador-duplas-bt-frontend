@@ -3,7 +3,7 @@ import axios from "axios";
 import "../css/CadastroJogador.css";
 import API_URL from "../config";
 
-const CadastroJogador = () => {
+const CadastroJogador = ({idCampeonato}) => {
   const [jogadores, setJogadores] = useState([]);
   const [nome, setNome] = useState("");
   const [classificacaoId, setClassificacaoId] = useState("");
@@ -12,7 +12,7 @@ const CadastroJogador = () => {
   const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
-    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/classificacoes`)
+    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/classificacoes/campeonato/${idCampeonato}`)
       .then(response => setClassificacoes(response.data))
       .catch(error => console.error("Erro ao buscar classificações:", error));
 

@@ -33,7 +33,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
   };
 
   const carregarClassificacoes = () => {
-    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/classificacoes`)
+    axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/classificacoes/campeonato/${idCampeonato}`)
       .then(response => setClassificacoes(response.data))
       .catch(error => console.error("Erro ao carregar classificações:", error));
   };
