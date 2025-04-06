@@ -19,7 +19,6 @@ const ListagemJogadores = ({ idCampeonato }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const [selecionarTodos, setSelecionarTodos] = useState(false);
   const [foto, setFoto] = useState(null);
-  
 
   useEffect(() => {
     carregarJogadores();
@@ -57,11 +56,10 @@ const ListagemJogadores = ({ idCampeonato }) => {
   const abrirModalInscricaoIndividual = (jogador) => {
     setJogadorInscricao({ ...jogador });
   };
-  
+
   const fecharModalInscricaoIndividual = () => {
     setJogadorInscricao(null);
   };
-  
 
   const fecharModalEdicao = () => {
     setJogadorEditando(null);
@@ -87,7 +85,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
       if (foto) {
         formData.append("foto", foto);
       }
-      
+
       if (jogadorEditando.id) {
         await axios.put(`${API_URL}/sorteador-duplas-bt/api/v1/jogadores/${jogadorEditando.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -97,7 +95,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }
-      
+
       setMensagem({ text: "Jogador salvo com sucesso!", type: "success" });
       carregarJogadores();
       fecharModalEdicao();
@@ -107,6 +105,23 @@ const ListagemJogadores = ({ idCampeonato }) => {
     }
   };
 
+  const inscreverIndividual = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("jogadorId", jogadorInscricao.id);
+      formData.append("classificacaoId", jogadorInscricao.classificacao);
+
+      await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/campeonato/${idCampeonato}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setMensagem({ text: "Jogador inscrito com sucesso!", type: "success" });
+    } catch (error) {
+      setMensagem({ text: error.response.data.message, type: "error" });
+    }
+    fecharModalInscricaoIndividual();
+  };
+
+
   const inscreverBatelada = async () => {
     const jogadoresSelecionados = jogadores
       .filter(jogador => jogador.selecionado)
@@ -114,7 +129,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
         jogadorId: jogador.id,
         classificacaoId: jogador.classificacao
       }));
-      console.log("Payload enviado:", JSON.stringify(jogadoresSelecionados, null, 2));
+
     try {
       const response = await axios.patch(
         `${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/campeonato/${idCampeonato}`,
@@ -143,22 +158,6 @@ const ListagemJogadores = ({ idCampeonato }) => {
     }
   
     fecharModalBatelada();
-  };
-
-  const inscreverIndividual = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("jogadorId", jogadorInscricao.id);
-      formData.append("classificacaoId", jogadorInscricao.classificacao);
-      
-      await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/campeonato/${idCampeonato}`, formData,  {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      setMensagem({ text: "Jogador inscrito com sucesso!", type: "success" });
-    } catch (error) {
-      setMensagem({ text: error.response.data.message, type: "error" });
-    }
-    fecharModalInscricaoIndividual();
   };
 
   const jogadoresFiltrados = jogadores.filter(jogador =>
@@ -228,9 +227,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
               <TableCell><strong>Foto</strong></TableCell>
               <TableCell><strong>Nome</strong></TableCell>
               {isAuthenticated && (
-                <>
-                  <TableCell align="center"><strong>Ações</strong></TableCell>
-                </>
+                <TableCell align="center"><strong>Ações</strong></TableCell>
               )}
             </TableRow>
           </TableHead>
@@ -311,7 +308,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
           <Button onClick={salvarEdicao} color="primary">Salvar</Button>
         </DialogActions>
       </Dialog>
-     
+
       {/* MODAL DE INSCRIÇÃO DE JOGADOR INDIVIDUAL */}
       <Dialog open={!!jogadorInscricao} onClose={fecharModalInscricaoIndividual}>
         <DialogTitle>Inscrição Individual</DialogTitle>
@@ -337,8 +334,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
         </DialogActions>
       </Dialog>
 
-
-      {/* Implementação do modal de inscrição em batelada */}
+      {/* MODAL DE INSCRIÇÃO EM BATELADA */}
       <Dialog open={modalBateladaAberto} onClose={fecharModalBatelada}>
         <DialogTitle>Inscrever Jogadores em Batelada</DialogTitle>
         <DialogContent>
@@ -368,6 +364,7 @@ const ListagemJogadores = ({ idCampeonato }) => {
           <Button onClick={inscreverBatelada} color="primary">Inscrever</Button>
         </DialogActions>
       </Dialog>
+
       <Snackbar 
         open={!!mensagem.text} 
         autoHideDuration={6000} 

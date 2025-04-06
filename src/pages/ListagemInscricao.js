@@ -102,28 +102,29 @@ const ListagemInscricao = ({idCampeonato}) => {
     }
   };
   
-  
-
   const salvarEdicao = async () => {
     try {
-      const formData = new FormData();
-      formData.append("nome", inscricaoEditando.nome);
-      formData.append("classificacaoId", inscricaoEditando.classificacao.id);
-      if (foto) {
-        formData.append("foto", foto);
-      }
-      
+      const { jogadorId, classificacaoId } = inscricaoEditando;
+
       if (inscricaoEditando.id) {
-        await axios.put(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/${inscricaoEditando.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+        // Atualizar inscrição existente
+        await axios.put(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/${inscricaoEditando.id}`, {
+          jogadorId,
+          classificacaoId,
+        }, {
+          headers: { "Content-Type": "application/json" },
         });
       } else {
-        await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+        // Criar nova inscrição
+        await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/campeonato/${idCampeonato}`, null, {
+          params: {
+            jogadorId,
+            classificacaoId,
+          },
         });
       }
-      
-      setMensagem({ text: "Inscrição salvo com sucesso!", type: "success" });
+
+      setMensagem({ text: "Inscrição salva com sucesso!", type: "success" });
       carregarInscricoes();
       fecharModalEdicao();
     } catch (error) {
@@ -132,10 +133,13 @@ const ListagemInscricao = ({idCampeonato}) => {
     }
   };
 
-  const inscricoesFiltradas = inscricoes.filter(inscricao =>
-    inscricao.jogador.nome.toLowerCase().includes(filtro.toLowerCase()) ||
-    inscricao.classificacao.descricao.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const inscricoesFiltradas = inscricoes.filter(inscricao => {
+    const nomeJogador = inscricao.nomeJogador?.toLowerCase() || "";
+    const classificacaoDescricao = inscricao.classificacaoDescricao?.toLowerCase() || "";
+    const termoFiltro = filtro.toLowerCase();
+
+    return nomeJogador.includes(termoFiltro) || classificacaoDescricao.includes(termoFiltro);
+  });
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
@@ -150,17 +154,6 @@ const ListagemInscricao = ({idCampeonato}) => {
         sx={{ mb: 2 }}
         onChange={(e) => setFiltro(e.target.value)}
       />
-
-      {isAuthenticated && (
-        <Button 
-          variant="contained" 
-          color="success" 
-          sx={{ mb: 2 }}
-          onClick={() => setInscricaoEditando({ nome: "", classificacao: { id: "" } })}
-        >
-          Adicionar Inscrição
-        </Button>
-      )}
 
     <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
       <Table sx={{ minWidth: 600 }}>
@@ -192,10 +185,10 @@ const ListagemInscricao = ({idCampeonato}) => {
             inscricoesFiltradas.map(inscricao => (
               <TableRow key={inscricao.id}>
                 <TableCell>
-                  {inscricao.jogador.fotoUrl && <Avatar src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${inscricao.jogador.fotoUrl}`} />}
+                  {inscricao.fotoUrl && <Avatar src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${inscricao.fotoUrl}`} />}
                 </TableCell>
-                <TableCell>{inscricao.jogador.nome}</TableCell>
-                <TableCell>{inscricao.classificacao.descricao}</TableCell>
+                <TableCell>{inscricao.nomeJogador}</TableCell>
+                <TableCell>{inscricao.classificacaoDescricao || "Sem classificação"}</TableCell>
                 {isAuthenticated && (
                   <>
                     <TableCell align="center">
@@ -227,24 +220,36 @@ const ListagemInscricao = ({idCampeonato}) => {
       </Table>
     </TableContainer>
 
-      <Dialog open={!!inscricaoEditando} onClose={fecharModalEdicao}>
+      <Dialog 
+        open={!!inscricaoEditando} 
+        onClose={fecharModalEdicao} 
+        disableEnforceFocus
+      >
         <DialogTitle>{inscricaoEditando?.id ? "Editar Inscrição" : "Adicionar Inscrição"}</DialogTitle>
         <DialogContent>
-          <TextField
-            label="Nome"
-            fullWidth
-            margin="dense"
-            value={inscricaoEditando?.jogador.nome || ""}
-            onChange={(e) => setInscricaoEditando({ ...inscricaoEditando, nome: e.target.value })}
-          />
+          {inscricaoEditando?.fotoUrl && (
+            <Avatar 
+              src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${inscricaoEditando.fotoUrl}`} 
+              alt={inscricaoEditando?.nomeJogador} 
+              sx={{ 
+                width: { xs: 150, sm: 200 }, // Responsivo: 150px em telas pequenas, 200px em maiores
+                height: { xs: 150, sm: 200 }, 
+                mb: 2 
+              }}
+            />
+          )}
+
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            <strong>Nome do Jogador:</strong> {inscricaoEditando?.nomeJogador || "Não informado"}
+          </Typography>
 
           <FormControl fullWidth margin="dense">
             <InputLabel>Classificação</InputLabel>
             <Select
-              value={inscricaoEditando?.classificacao.id || ""}
+              value={inscricaoEditando?.classificacaoId || ""}
               onChange={(e) => setInscricaoEditando({ 
                 ...inscricaoEditando, 
-                classificacao: classificacoes.find(c => c.id === e.target.value) 
+                classificacaoId: e.target.value 
               })}
             >
               {classificacoes.map(c => (
@@ -252,8 +257,6 @@ const ListagemInscricao = ({idCampeonato}) => {
               ))}
             </Select>
           </FormControl>
-
-          <Input type="file" onChange={handleFileChange} />
         </DialogContent>
         <DialogActions>
           <Button onClick={fecharModalEdicao} color="error">Cancelar</Button>

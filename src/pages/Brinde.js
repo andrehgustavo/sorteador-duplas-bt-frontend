@@ -12,7 +12,7 @@ const Brinde = ({ idCampeonato }) => {
 
   const fetchBrinde = async () => {
     try {
-        const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/ganhador-brinde`);
+      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/ganhador-brinde`);
       setBrinde(response.data);
       setVisibilidade(!user);
     } catch (error) {
@@ -28,7 +28,6 @@ const Brinde = ({ idCampeonato }) => {
     try {
       const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/${idCampeonato}/sortear-brinde`);
       setBrinde(response.data);
-      setBrinde(response.data);
       setVisibilidade(false);
       iniciarContagemRegressiva();
     } catch (error) {
@@ -43,7 +42,7 @@ const Brinde = ({ idCampeonato }) => {
   const iniciarContagemRegressiva = () => {
     setCountdown(3);
     const interval = setInterval(() => {
-      setCountdown(prev => {
+      setCountdown((prev) => {
         if (prev === 1) {
           clearInterval(interval);
           setVisibilidade(true);
@@ -55,7 +54,7 @@ const Brinde = ({ idCampeonato }) => {
   };
 
   return (
-    <div className="brinde-container ">
+    <div className="brinde-container">
       <h2>Sorteio de Brinde</h2>
       {user && (
         <>
@@ -76,8 +75,15 @@ const Brinde = ({ idCampeonato }) => {
             {countdown !== null && <div className="brinde-countdown">{countdown}</div>}
             {visibilidade && (
               <div className="brinde-card-brinde">
-                {brinde.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${brinde.jogador.fotoUrl}`} alt={`${brinde.jogador.nome} Foto`} className="brinde-photo" />}
-                <p className="brinde-name">{brinde.jogador.nome}</p>
+                {brinde.fotoUrl && (
+                  <img
+                    src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${brinde.fotoUrl}`}
+                    alt={`${brinde.nomeJogador} Foto`}
+                    className="brinde-photo"
+                  />
+                )}
+                <p className="brinde-name">{brinde.nomeJogador}</p>
+                <p className="brinde-classificacao">{brinde.classificacaoDescricao}</p>
               </div>
             )}
           </div>

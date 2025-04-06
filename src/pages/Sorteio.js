@@ -101,12 +101,12 @@ const Sorteio = ({ idCampeonato }) => {
               {visibilidade[index] && (
                 <div className="card-dupla">
                   <div className="card-player">
-                    {dupla.inscricao1.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.inscricao1.jogador.fotoUrl}`} alt={`${dupla.inscricao1.jogador.nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla.inscricao1.jogador.nome} <span className="player-classification">({dupla.inscricao1.classificacao.descricao})</span></p>
+                    {dupla.jogador1FotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.jogador1FotoUrl}`} alt={`${dupla.jogador1Nome} Foto`} className="player-photo" />}
+                    <p className="player-name">{dupla.jogador1Nome} <span className="player-classification">({dupla.jogador1Classificacao})</span></p>
                   </div>
                   <div className="card-player">
-                    {dupla.inscricao2.jogador.fotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.inscricao2.jogador.fotoUrl}`} alt={`${dupla.inscricao2.jogador.nome} Foto`} className="player-photo" />}
-                    <p className="player-name">{dupla.inscricao2.jogador.nome} <span className="player-classification">({dupla.inscricao2.classificacao.descricao})</span></p>
+                    {dupla.jogador2FotoUrl && <img src={`${API_URL}/sorteador-duplas-bt/api/v1/fotos/${dupla.jogador2FotoUrl}`} alt={`${dupla.jogador2Nome} Foto`} className="player-photo" />}
+                    <p className="player-name">{dupla.jogador2Nome} <span className="player-classification">({dupla.jogador2Classificacao})</span></p>
                   </div>
                 </div>
               )}
