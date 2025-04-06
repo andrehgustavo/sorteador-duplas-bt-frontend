@@ -9,6 +9,7 @@ import logo from "./assets/logo2.png";
 import "./App.css";
 import Brinde from "./pages/Brinde";
 import API_URL from "./config";
+import GruposDistribuidosPage from "./pages/GrupoDistribuidosPage";
 
 const PrivateRoute = ({ children, role }) => {
   const { user } = useContext(AuthContext);
@@ -84,8 +85,9 @@ const MainApp = () => {
         <nav className={`nav ${menuOpen ? "active" : ""}`}>
           <Link to="/sorteador-duplas-bt-frontend/duplas" className="nav-link">Sorteio de Duplas</Link>
           <Link to="/sorteador-duplas-bt-frontend/brinde" className="nav-link">Sorteio de Brindes</Link>
-          <Link to="/sorteador-duplas-bt-frontend/listagem" className="nav-link">Lista de Jogadores</Link>
-          <Link to="/sorteador-duplas-bt-frontend/listagem-inscricao" className="nav-link">Lista de Inscrições</Link>
+          <Link to="/sorteador-duplas-bt-frontend/listagem" className="nav-link">Jogadores</Link>
+          <Link to="/sorteador-duplas-bt-frontend/listagem-inscricao" className="nav-link">Inscrições</Link>
+          <Link to="/sorteador-duplas-bt-frontend/grupos" className="nav-link">Grupos</Link>
         </nav>
         <div className="auth-section">
           {user ? (
@@ -106,6 +108,7 @@ const MainApp = () => {
           <Route path="/sorteador-duplas-bt-frontend/brinde" element={<Brinde idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/listagem" element={<ListagemJogadores idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/listagem-inscricao" element={<ListagemInscricao idCampeonato={idCampeonatoAtivo} />} />
+          <Route path="/sorteador-duplas-bt-frontend/grupos"  element={<GruposDistribuidosPage idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/login" element={<Login />} />
         </Routes>
       </main>
