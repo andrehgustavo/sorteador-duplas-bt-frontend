@@ -1,14 +1,27 @@
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import {
-  Container, Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody,
-  Snackbar, Alert, CircularProgress, Button, TextField, Box
+  Container,
+  Typography,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  Button,
+  TextField,
+  Box,
 } from "@mui/material";
 import AuthContext from "../AuthContext";
 import API_URL from "../config";
 
 const GruposDistribuidosPage = ({ idCampeonato }) => {
   const [grupos, setGrupos] = useState([]);
+  const [estatisticas, setEstatisticas] = useState({});
   const [quantidadeGrupos, setQuantidadeGrupos] = useState("");
   const [mensagem, setMensagem] = useState({ text: "", type: "success" });
   const [loading, setLoading] = useState(false);
@@ -21,11 +34,26 @@ const GruposDistribuidosPage = ({ idCampeonato }) => {
   const carregarGrupos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/grupos/campeonato/${idCampeonato}`);
-      setGrupos(response.data);
+      // Buscar grupos do campeonato
+      const responseGrupos = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/grupos/campeonato/${idCampeonato}`);
+      setGrupos(responseGrupos.data);
+
+      // Buscar todas as estatísticas do campeonato
+      const responseEstatisticas = await axios.get(`${API_URL}/sorteador-duplas-bt/api/v1/ranking/reizinho/campeonato/${idCampeonato}`);
+      const estatisticasPorGrupo = {};
+
+      // Organizar estatísticas por grupo usando o campo idGrupo
+      responseEstatisticas.data.forEach((estatistica) => {
+        if (!estatisticasPorGrupo[estatistica.idGrupo]) {
+          estatisticasPorGrupo[estatistica.idGrupo] = [];
+        }
+        estatisticasPorGrupo[estatistica.idGrupo].push(estatistica);
+      });
+
+      setEstatisticas(estatisticasPorGrupo);
     } catch (error) {
-      console.error("Erro ao carregar grupos:", error);
-      setMensagem({ text: "Erro ao carregar grupos.", type: "error" });
+      console.error("Erro ao carregar grupos ou estatísticas:", error);
+      setMensagem({ text: "Erro ao carregar grupos ou estatísticas.", type: "error" });
     } finally {
       setLoading(false);
     }
@@ -42,15 +70,35 @@ const GruposDistribuidosPage = ({ idCampeonato }) => {
       await axios.post(`${API_URL}/sorteador-duplas-bt/api/v1/grupos/distribuir`, null, {
         params: {
           campeonatoId: idCampeonato,
-          quantidadeGrupos: quantidadeGrupos
-        }
+          quantidadeGrupos: quantidadeGrupos,
+        },
       });
 
       setMensagem({ text: "Grupos distribuídos com sucesso!", type: "success" });
-      carregarGrupos(); // atualiza a listagem após distribuição
+      carregarGrupos(); // Atualiza a listagem após distribuição
     } catch (error) {
       console.error("Erro ao distribuir grupos:", error);
       setMensagem({ text: "Erro ao distribuir grupos.", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const apagarGrupos = async () => {
+    if (!window.confirm("Tem certeza que deseja apagar todos os grupos?")) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await axios.delete(`${API_URL}/sorteador-duplas-bt/api/v1/grupos/campeonato/${idCampeonato}`);
+      setMensagem({ text: "Todos os grupos foram apagados com sucesso!", type: "success" });
+      setGrupos([]); // Limpa os grupos após apagar
+      setEstatisticas({}); // Limpa as estatísticas
+    } catch (error) {
+      console.error("Erro ao apagar grupos:", error);
+      const mensagemErro = error.response?.data || "Erro ao apagar os grupos."; // Captura a mensagem diretamente de `data`
+      setMensagem({ text: mensagemErro, type: "error" });
     } finally {
       setLoading(false);
     }
@@ -74,41 +122,80 @@ const GruposDistribuidosPage = ({ idCampeonato }) => {
           <Button variant="contained" onClick={distribuirGrupos}>
             Distribuir Grupos
           </Button>
+          <Button variant="outlined" color="error" onClick={apagarGrupos}>
+            Apagar Grupos
+          </Button>
         </Box>
       )}
 
       {loading ? (
         <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />
-      ) : (
-        grupos.length > 0 ? (
-          grupos.map((grupo, index) => (
-            <Paper key={grupo.id} sx={{ mb: 4, p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Grupo {grupo.nome || `#${index + 1}`}
-              </Typography>
-              <Table size="small" sx={{ tableLayout: "fixed", width: "100%" }}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left"><strong>Jogador</strong></TableCell>
-                    <TableCell align="left"><strong>Classificação</strong></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {grupo.inscricoes.map(inscricao => (
-                    <TableRow key={inscricao.id}>
-                      <TableCell align="left">{inscricao.nomeJogador}</TableCell>
-                      <TableCell align="left">{inscricao.classificacaoDescricao}</TableCell>
+      ) : grupos.length > 0 ? (
+        grupos.map((grupo, index) => (
+          <Paper
+            key={grupo.id}
+            sx={{
+              mb: 4,
+              p: 3, // Aumenta o padding interno
+              minHeight: "300px", // Define uma altura mínima para o card
+              overflowX: "auto", // Adiciona rolagem horizontal caso necessário
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Grupo {grupo.nome || `#${index + 1}`}
+            </Typography>
+
+            {/* Tabela de classificação */}
+            <Table size="small" sx={{ tableLayout: "fixed", width: "100%", mb: 2 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>#</strong></TableCell>
+                  <TableCell><strong>Jogador</strong></TableCell>
+                  <TableCell><strong>Class.</strong></TableCell>
+                  <TableCell align="center" title="Jogos"><strong>J</strong></TableCell>
+                  <TableCell align="center" title="Vitórias"><strong>V</strong></TableCell>
+                  <TableCell align="center" title="Pontos"><strong>P</strong></TableCell>
+                  <TableCell align="center" title="Sets Vencidos"><strong>SV</strong></TableCell>
+                  <TableCell align="center" title="Sets Perdidos"><strong>SP</strong></TableCell>
+                  <TableCell align="center" title="Games a Favor"><strong>GF</strong></TableCell>
+                  <TableCell align="center" title="Games Contra"><strong>GC</strong></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(estatisticas[grupo.id] || [])
+                  .sort((a, b) => b.pontos - a.pontos) // Ordenar por pontos
+                  .map((estatistica, idx) => (
+                    <TableRow
+                      key={estatistica.id}
+                      sx={{
+                        backgroundColor: idx % 2 === 0 ? "#f9f9f9" : "#ffffff", // Cores alternadas
+                      }}
+                    >
+                      <TableCell>{`${idx + 1}º`}</TableCell>
+                      <TableCell>{estatistica.classificacaoDescricao}</TableCell>
+                      <TableCell>{estatistica.jogador}</TableCell>
+                      <TableCell align="center">{estatistica.jogos}</TableCell>
+                      <TableCell align="center">{estatistica.vitorias}</TableCell>
+                      <TableCell align="center">{estatistica.pontos}</TableCell>
+                      <TableCell align="center">{estatistica.setsVencidos}</TableCell>
+                      <TableCell align="center">{estatistica.setsPerdidos}</TableCell>
+                      <TableCell align="center">{estatistica.gamesAFavor}</TableCell>
+                      <TableCell align="center">{estatistica.gamesContra}</TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
-            </Paper>
-          ))
-        ) : (
-          <Typography variant="body1" align="center" sx={{ mt: 4 }}>
-            Nenhum grupo foi distribuído ainda.
-          </Typography>
-        )
+              </TableBody>
+            </Table>
+
+            {/* Legenda */}
+            <Typography variant="body2" sx={{ mt: 2 }}>
+              <strong>Legenda:</strong> J = Jogos, V = Vitórias, P = Pontos, SV = Sets Vencidos, SP = Sets Perdidos, GF = Games a Favor, GC = Games Contra.
+            </Typography>
+          </Paper>
+        ))
+      ) : (
+        <Typography variant="body1" align="center" sx={{ mt: 4 }}>
+          Nenhum grupo foi distribuído ainda.
+        </Typography>
       )}
 
       <Snackbar

@@ -10,6 +10,7 @@ import "./App.css";
 import Brinde from "./pages/Brinde";
 import API_URL from "./config";
 import GruposDistribuidosPage from "./pages/GrupoDistribuidosPage";
+import PartidasGrupoPage from "./pages/PartidasGrupoPage";
 
 const PrivateRoute = ({ children, role }) => {
   const { user } = useContext(AuthContext);
@@ -75,7 +76,7 @@ const MainApp = () => {
     <>
       <header className="header">
         <Link to="/sorteador-duplas-bt-frontend" className="nav-link">
-          <img src={logo} alt="II Maduro Open de BT" className="logo" />
+          <img src={logo} alt={nomeCampeonatoAtivo} className="logo" />
         </Link>
         <div className="hamburger" onClick={toggleMenu}>
           <div className="line"></div>
@@ -87,7 +88,8 @@ const MainApp = () => {
           <Link to="/sorteador-duplas-bt-frontend/brinde" className="nav-link">Sorteio de Brindes</Link>
           <Link to="/sorteador-duplas-bt-frontend/listagem" className="nav-link">Jogadores</Link>
           <Link to="/sorteador-duplas-bt-frontend/listagem-inscricao" className="nav-link">Inscrições</Link>
-          <Link to="/sorteador-duplas-bt-frontend/grupos" className="nav-link">Grupos</Link>
+          <Link to="/sorteador-duplas-bt-frontend/grupos" className="nav-link">Tabela</Link>
+          <Link to="/sorteador-duplas-bt-frontend/partidas-grupos" className="nav-link">Partidas</Link>
         </nav>
         <div className="auth-section">
           {user ? (
@@ -109,6 +111,7 @@ const MainApp = () => {
           <Route path="/sorteador-duplas-bt-frontend/listagem" element={<ListagemJogadores idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/listagem-inscricao" element={<ListagemInscricao idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/grupos"  element={<GruposDistribuidosPage idCampeonato={idCampeonatoAtivo} />} />
+          <Route path="/sorteador-duplas-bt-frontend/partidas-grupos"  element={<PartidasGrupoPage idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/login" element={<Login />} />
         </Routes>
       </main>

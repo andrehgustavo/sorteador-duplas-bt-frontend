@@ -1,0 +1,7 @@
+td.vencedor {
+    font-weight: bold; /* Deixa o texto em negrito */
+    color: #155724; /* Altera a cor da fonte */
+    background-color: #d4edda; /* Cor de fundo */
+    padding: 4px; /* Adiciona espaçamento interno */
+    border-radius: 4px; /* Bordas arredondadas */
+  }
