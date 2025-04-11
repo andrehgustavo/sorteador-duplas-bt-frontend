@@ -9,31 +9,42 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setUser({ username: "" });
+    const role = localStorage.getItem("role");
+    const username = localStorage.getItem("username");
+
+    if (token && role && username) {
+      setUser({ username, role });
       setIsAuthenticated(true);
     }
   }, []);
 
   const login = async (username, password) => {
     try {
-      await loginService(username, password);
-      setUser({ username });
+      const response = await loginService(username, password); // Supondo que loginService retorne os dados do backend
+      const { role, token } = response; // Extraindo o papel e o token do backend
+      console.log("Papel retornado pelo backend:", role); // Adiciona o console.log aqui
+      localStorage.setItem("token", token); // Armazena o token no localStorage
+      localStorage.setItem("role", role); // Armazena o papel no localStorage
+      localStorage.setItem("username", username); // Armazena o nome de usuário no localStorage
+      setUser({ username, role }); // Armazena o papel no estado do usuário
       setIsAuthenticated(true);
-      
     } catch (error) {
-      throw new Error("Usu�rio ou senha incorretos!");
+      console.error("Erro no login:", error);
+      throw new Error("Usuário ou senha incorretos!");
     }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
     setUser(null);
     setIsAuthenticated(false);
   };
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+      {console.log("Estado do usuário no AuthContext:", user)}
       {children}
     </AuthContext.Provider>
   );

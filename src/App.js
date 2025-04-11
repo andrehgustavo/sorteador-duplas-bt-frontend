@@ -9,18 +9,34 @@ import logo from "./assets/logo2.png";
 import "./App.css";
 import Brinde from "./pages/Brinde";
 import API_URL from "./config";
-import GruposDistribuidosPage from "./pages/GrupoDistribuidosPage";
+import TabelaPage from "./pages/TabelaPage";
 import PartidasGrupoPage from "./pages/PartidasGrupoPage";
+import ConfiguracaoPage from "./pages/ConfiguracaoPage";
+import PaginaEntrada from "./pages/PaginaEntrada";
+import SettingsIcon from "@mui/icons-material/Settings"; // Importar o ícone de engrenagem
 
 const PrivateRoute = ({ children, role }) => {
   const { user } = useContext(AuthContext);
 
-  if (!user) {
-    return <Navigate to="/login" />;
+  // Exibe um indicador de carregamento enquanto o estado do usuário está sendo inicializado
+  if (user === null) {
+    return <div>Carregando...</div>;
   }
 
+  // Redireciona para a página de login se o usuário não estiver autenticado
+  if (!user) {
+    return <Navigate to="/sorteador-duplas-bt-frontend/login" />;
+  }
+
+  // Verifica se o papel do usuário corresponde ao papel necessário
   if (role && user.role !== role) {
-    return <Navigate to="/" />;
+    return (
+      <div>
+        <h1>Acesso Negado</h1>
+        <p>Você não tem permissão para acessar esta página.</p>
+        <Link to="/sorteador-duplas-bt-frontend/">Voltar para a página inicial</Link>
+      </div>
+    );
   }
 
   return children;
@@ -65,7 +81,7 @@ const MainApp = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/sorteador-duplas-bt-frontend/login");
   };
 
   const toggleMenu = () => {
@@ -95,6 +111,11 @@ const MainApp = () => {
           {user ? (
             <>
               <span>{user.username}</span>
+              {user.role === "ADMIN" && (
+                <Link to="/sorteador-duplas-bt-frontend/configuracoes" className="nav-link">
+                  <SettingsIcon style={{ marginLeft: "10px", cursor: "pointer" }} />
+                </Link>
+              )}
               <button className="logout-btn" onClick={handleLogout}>Sair</button>
             </>
           ) : (
@@ -106,13 +127,23 @@ const MainApp = () => {
         <img src={logo} alt="Marca d' água" className="watermark" />
         <h1>{nomeCampeonatoAtivo || "Carregando..."}</h1>
         <Routes>
+          <Route path="/" element={<Navigate to="/sorteador-duplas-bt-frontend" />} />
+          <Route path="/sorteador-duplas-bt-frontend" element={<PaginaEntrada />} />
           <Route path="/sorteador-duplas-bt-frontend/duplas" element={<Sorteio idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/brinde" element={<Brinde idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/listagem" element={<ListagemJogadores idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/listagem-inscricao" element={<ListagemInscricao idCampeonato={idCampeonatoAtivo} />} />
-          <Route path="/sorteador-duplas-bt-frontend/grupos"  element={<GruposDistribuidosPage idCampeonato={idCampeonatoAtivo} />} />
-          <Route path="/sorteador-duplas-bt-frontend/partidas-grupos"  element={<PartidasGrupoPage idCampeonato={idCampeonatoAtivo} />} />
+          <Route path="/sorteador-duplas-bt-frontend/grupos" element={<TabelaPage idCampeonato={idCampeonatoAtivo} />} />
+          <Route path="/sorteador-duplas-bt-frontend/partidas-grupos" element={<PartidasGrupoPage idCampeonato={idCampeonatoAtivo} />} />
           <Route path="/sorteador-duplas-bt-frontend/login" element={<Login />} />
+          <Route
+            path="/sorteador-duplas-bt-frontend/configuracoes"
+            element={
+              <PrivateRoute role="ADMIN">
+                <ConfiguracaoPage idCampeonato={idCampeonatoAtivo} />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </main>
     </>
