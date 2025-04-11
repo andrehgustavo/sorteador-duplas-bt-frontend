@@ -19,7 +19,7 @@ import {
 import AuthContext from "../AuthContext";
 import API_URL from "../config";
 
-const GruposDistribuidosPage = ({ idCampeonato }) => {
+const TabelaPage = ({ idCampeonato }) => {
   const [grupos, setGrupos] = useState([]);
   const [estatisticas, setEstatisticas] = useState({});
   const [quantidadeGrupos, setQuantidadeGrupos] = useState("");
@@ -159,6 +159,8 @@ const GruposDistribuidosPage = ({ idCampeonato }) => {
                   <TableCell align="center" title="Sets Perdidos"><strong>SP</strong></TableCell>
                   <TableCell align="center" title="Games a Favor"><strong>GF</strong></TableCell>
                   <TableCell align="center" title="Games Contra"><strong>GC</strong></TableCell>
+                  <TableCell align="center" title="Saldo de Games"><strong>SG</strong></TableCell> {/* Nova coluna */}
+                  <TableCell align="center" title="Game Average"><strong>GA</strong></TableCell> {/* Nova coluna */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -181,6 +183,10 @@ const GruposDistribuidosPage = ({ idCampeonato }) => {
                       <TableCell align="center">{estatistica.setsPerdidos}</TableCell>
                       <TableCell align="center">{estatistica.gamesAFavor}</TableCell>
                       <TableCell align="center">{estatistica.gamesContra}</TableCell>
+                      <TableCell align="center">{estatistica.saldoGames}</TableCell> {/* Exibe SG */}
+                      <TableCell align="center">
+                        {estatistica.gameAverage ? estatistica.gameAverage.toFixed(2) : "-"} {/* Exibe GA com 2 casas decimais */}
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -188,7 +194,7 @@ const GruposDistribuidosPage = ({ idCampeonato }) => {
 
             {/* Legenda */}
             <Typography variant="body2" sx={{ mt: 2 }}>
-              <strong>Legenda:</strong> J = Jogos, V = Vitórias, P = Pontos, SV = Sets Vencidos, SP = Sets Perdidos, GF = Games a Favor, GC = Games Contra.
+              <strong>Legenda:</strong> J = Jogos, V = Vitórias, P = Pontos, SV = Sets Vencidos, SP = Sets Perdidos, GF = Games a Favor, GC = Games Contra, SG = Saldo de Games, GA = Game Average (%).
             </Typography>
           </Paper>
         ))
@@ -211,4 +217,4 @@ const GruposDistribuidosPage = ({ idCampeonato }) => {
   );
 };
 
-export default GruposDistribuidosPage;
+export default TabelaPage;
