@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import {
   Container,
@@ -24,6 +24,7 @@ import {
   Box,
 } from "@mui/material";
 import API_URL from "../config";
+import AuthContext from "../AuthContext"; // Importe o contexto de autenticação
 import "../css/PartidasGrupoPage.css"; // Importe o arquivo CSS
 
 const PartidasGrupoPage = ({ idCampeonato }) => {
@@ -34,6 +35,7 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
   const [loading, setLoading] = useState(false);
   const [modalEdicaoAberto, setModalEdicaoAberto] = useState(false);
   const [partidaEditando, setPartidaEditando] = useState(null);
+  const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     carregarGrupos();
@@ -81,7 +83,7 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
       carregarPartidas(grupoSelecionado);
     } catch (error) {
       console.error("Erro ao criar partidas:", error);
-      setMensagem({ text: "Erro ao criar partidas.", type: "error" });
+      setMensagem({ text: error.response.data.message || "Erro ao criar partidas.", type: "error" });
     }
   };
 
@@ -92,7 +94,7 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
       carregarPartidas(grupoSelecionado);
     } catch (error) {
       console.error("Erro ao apagar todas as partidas:", error);
-      setMensagem({ text: "Erro ao apagar todas as partidas.", type: "error" });
+      setMensagem({ text: error.response.data.message || "Erro ao apagar todas as partidas.", type: "error" });
     }
   };
 
@@ -176,15 +178,16 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
         Partidas do Grupo
       </Typography>
 
-      {/* Botões para criar e apagar todas as partidas */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Button variant="contained" color="primary" onClick={criarTodasPartidas}>
-          Criar Todas as Partidas
-        </Button>
-        <Button variant="contained" color="error" onClick={apagarTodasPartidas}>
-          Apagar Todas as Partidas
-        </Button>
-      </Box>
+      {isAuthenticated && (
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Button variant="contained" color="primary" onClick={criarTodasPartidas}>
+            Criar Todas as Partidas
+          </Button>
+          <Button variant="contained" color="error" onClick={apagarTodasPartidas}>
+            Apagar Todas as Partidas
+          </Button>
+        </Box>
+      )}
 
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel>Selecione um Grupo</InputLabel>
