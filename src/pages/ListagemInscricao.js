@@ -144,7 +144,7 @@ const ListagemInscricao = ({idCampeonato}) => {
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Lista de Inscrições
+        Lista de Inscrições ({inscricoes.length})
       </Typography>
 
       <TextField
