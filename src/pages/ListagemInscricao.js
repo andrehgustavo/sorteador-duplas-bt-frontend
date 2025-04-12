@@ -64,17 +64,21 @@ const ListagemInscricao = ({idCampeonato}) => {
 
   const atualizarParticipacaoBrinde = async (inscricao) => {
     const inscricaoAtualizada = { ...inscricao, participaBrinde: !inscricao.participaBrinde };
-  
+
     try {
+      // Atualiza no backend
       await axios.patch(`${API_URL}/sorteador-duplas-bt/api/v1/inscricoes/atualizarParticipacaoBrinde`, [inscricaoAtualizada], {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-  
-      setInscricoes(inscricoes.map(i => 
-        i.id === inscricao.id ? inscricaoAtualizada : i
-      ));
+
+      // Atualiza o estado local
+      setInscricoes((prevInscricoes) =>
+        prevInscricoes.map((i) =>
+          i.id === inscricao.id ? { ...i, participaBrinde: inscricaoAtualizada.participaBrinde } : i
+        )
+      );
     } catch (error) {
       console.error("Erro ao atualizar participação no brinde:", error);
     }
@@ -97,6 +101,7 @@ const ListagemInscricao = ({idCampeonato}) => {
       });
   
       setInscricoes(inscricoesAtualizadas);
+      await carregarInscricoes();
     } catch (error) {
       console.error("Erro ao atualizar participação no brinde para todos os inscricoes:", error);
     }
@@ -193,7 +198,7 @@ const ListagemInscricao = ({idCampeonato}) => {
                   <>
                     <TableCell align="center">
                       <Checkbox
-                        checked={inscricao.participaBrinde}
+                        checked={!!inscricao.participaBrinde} // Garante que o valor seja sempre booleano
                         onChange={() => atualizarParticipacaoBrinde(inscricao)}
                       />
                     </TableCell>
