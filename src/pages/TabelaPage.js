@@ -15,6 +15,7 @@ import {
   Button,
   TextField,
   Box,
+  Grid,
 } from "@mui/material";
 import AuthContext from "../AuthContext";
 import API_URL from "../config";
@@ -97,7 +98,7 @@ const TabelaPage = ({ idCampeonato }) => {
       setEstatisticas({}); // Limpa as estatísticas
     } catch (error) {
       console.error("Erro ao apagar grupos:", error);
-      const mensagemErro = error.response?.data || "Erro ao apagar os grupos."; // Captura a mensagem diretamente de `data`
+      const mensagemErro = error.response?.data || "Erro ao apagar os grupos.";
       setMensagem({ text: mensagemErro, type: "error" });
     } finally {
       setLoading(false);
@@ -105,19 +106,20 @@ const TabelaPage = ({ idCampeonato }) => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
         Grupos Distribuídos
       </Typography>
 
       {isAuthenticated && (
-        <Box sx={{ display: "flex", gap: 2, mb: 3, alignItems: "center" }}>
+        <Box sx={{ display: "flex", gap: 2, mb: 3, alignItems: "center", flexWrap: "wrap" }}>
           <TextField
             label="Quantidade de Grupos"
             type="number"
             value={quantidadeGrupos}
             onChange={(e) => setQuantidadeGrupos(e.target.value)}
             size="small"
+            sx={{ flex: "1 1 auto", minWidth: "200px" }}
           />
           <Button variant="contained" onClick={distribuirGrupos}>
             Distribuir Grupos
@@ -131,73 +133,74 @@ const TabelaPage = ({ idCampeonato }) => {
       {loading ? (
         <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />
       ) : grupos.length > 0 ? (
-        grupos.map((grupo, index) => (
-          <Paper
-            key={grupo.id}
-            sx={{
-              mb: 4,
-              p: 3, // Aumenta o padding interno
-              minHeight: "300px", // Define uma altura mínima para o card
-              overflowX: "auto", // Adiciona rolagem horizontal caso necessário
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-              Grupo {grupo.nome || `#${index + 1}`}
-            </Typography>
+        <Grid container spacing={2}>
+          {grupos.map((grupo, index) => (
+            <Grid item xs={12} sm={6} md={4} key={grupo.id}>
+              <Paper
+                sx={{
+                  p: 2,
+                  minHeight: "300px",
+                  overflow: "hidden", // Garante que o conteúdo não ultrapasse o card
+                }}
+              >
+                <Typography variant="h6" gutterBottom>
+                  Grupo {grupo.nome || `#${index + 1}`}
+                </Typography>
 
-            {/* Tabela de classificação */}
-            <Table size="small" sx={{ tableLayout: "fixed", width: "100%", mb: 2 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell><strong>#</strong></TableCell>
-                  <TableCell><strong>Jogador</strong></TableCell>
-                  <TableCell><strong>Class.</strong></TableCell>
-                  <TableCell align="center" title="Jogos"><strong>J</strong></TableCell>
-                  <TableCell align="center" title="Vitórias"><strong>V</strong></TableCell>
-                  <TableCell align="center" title="Pontos"><strong>P</strong></TableCell>
-                  <TableCell align="center" title="Sets Vencidos"><strong>SV</strong></TableCell>
-                  <TableCell align="center" title="Sets Perdidos"><strong>SP</strong></TableCell>
-                  <TableCell align="center" title="Games a Favor"><strong>GF</strong></TableCell>
-                  <TableCell align="center" title="Games Contra"><strong>GC</strong></TableCell>
-                  <TableCell align="center" title="Saldo de Games"><strong>SG</strong></TableCell> {/* Nova coluna */}
-                  <TableCell align="center" title="Game Average"><strong>GA</strong></TableCell> {/* Nova coluna */}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(estatisticas[grupo.id] || [])
-                  .sort((a, b) => b.pontos - a.pontos) // Ordenar por pontos
-                  .map((estatistica, idx) => (
-                    <TableRow
-                      key={estatistica.id}
-                      sx={{
-                        backgroundColor: idx % 2 === 0 ? "#f9f9f9" : "#ffffff", // Cores alternadas
-                      }}
-                    >
-                      <TableCell>{`${idx + 1}º`}</TableCell>
-                      <TableCell>{estatistica.classificacaoDescricao}</TableCell>
-                      <TableCell>{estatistica.jogador}</TableCell>
-                      <TableCell align="center">{estatistica.jogos}</TableCell>
-                      <TableCell align="center">{estatistica.vitorias}</TableCell>
-                      <TableCell align="center">{estatistica.pontos}</TableCell>
-                      <TableCell align="center">{estatistica.setsVencidos}</TableCell>
-                      <TableCell align="center">{estatistica.setsPerdidos}</TableCell>
-                      <TableCell align="center">{estatistica.gamesAFavor}</TableCell>
-                      <TableCell align="center">{estatistica.gamesContra}</TableCell>
-                      <TableCell align="center">{estatistica.saldoGames}</TableCell> {/* Exibe SG */}
-                      <TableCell align="center">
-                        {estatistica.gameAverage ? estatistica.gameAverage.toFixed(2) : "-"} {/* Exibe GA com 2 casas decimais */}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
+                {/* Contêiner com rolagem lateral */}
+                <Box sx={{ overflowX: "auto" }}>
+                  <Table size="small" sx={{ minWidth: "600px" }}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell><strong>#</strong></TableCell>
+                        <TableCell><strong>Jogador</strong></TableCell>
+                        <TableCell><strong>Class.</strong></TableCell>
+                        <TableCell align="center" title="Jogos"><strong>J</strong></TableCell>
+                        <TableCell align="center" title="Vitórias"><strong>V</strong></TableCell>
+                        <TableCell align="center" title="Pontos"><strong>P</strong></TableCell>
+                        <TableCell align="center" title="Sets Vencidos"><strong>SV</strong></TableCell>
+                        <TableCell align="center" title="Sets Perdidos"><strong>SP</strong></TableCell>
+                        <TableCell align="center" title="Games a Favor"><strong>GF</strong></TableCell>
+                        <TableCell align="center" title="Games Contra"><strong>GC</strong></TableCell>
+                        <TableCell align="center" title="Saldo de Games"><strong>SG</strong></TableCell>
+                        <TableCell align="center" title="Game Average"><strong>GA</strong></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {(estatisticas[grupo.id] || [])
+                        .sort((a, b) => b.pontos - a.pontos)
+                        .map((estatistica, idx) => (
+                          <TableRow key={estatistica.id}>
+                            <TableCell>{`${idx + 1}º`}</TableCell>
+                            <TableCell sx={{ wordWrap: "break-word", whiteSpace: "normal" }}>
+                              {estatistica.jogador}
+                            </TableCell>
+                            <TableCell>{estatistica.classificacaoDescricao}</TableCell>
+                            <TableCell align="center">{estatistica.jogos}</TableCell>
+                            <TableCell align="center">{estatistica.vitorias}</TableCell>
+                            <TableCell align="center">{estatistica.pontos}</TableCell>
+                            <TableCell align="center">{estatistica.setsVencidos}</TableCell>
+                            <TableCell align="center">{estatistica.setsPerdidos}</TableCell>
+                            <TableCell align="center">{estatistica.gamesAFavor}</TableCell>
+                            <TableCell align="center">{estatistica.gamesContra}</TableCell>
+                            <TableCell align="center">{estatistica.saldoGames}</TableCell>
+                            <TableCell align="center">
+                              {estatistica.gameAverage ? estatistica.gameAverage.toFixed(2) : "-"}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </Box>
 
-            {/* Legenda */}
-            <Typography variant="body2" sx={{ mt: 2 }}>
-              <strong>Legenda:</strong> J = Jogos, V = Vitórias, P = Pontos, SV = Sets Vencidos, SP = Sets Perdidos, GF = Games a Favor, GC = Games Contra, SG = Saldo de Games, GA = Game Average (%).
-            </Typography>
-          </Paper>
-        ))
+                {/* Legenda */}
+                <Typography variant="caption" sx={{ display: "block", mt: 2 }}>
+                  <strong>Legenda:</strong> J = Jogos, V = Vitórias, P = Pontos, SV = Sets Vencidos, SP = Sets Perdidos, GF = Games a Favor, GC = Games Contra, SG = Saldo de Games, GA = Game Average
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       ) : (
         <Typography variant="body1" align="center" sx={{ mt: 4 }}>
           Nenhum grupo foi distribuído ainda.
