@@ -96,6 +96,9 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
   };
 
   const salvarResultado = async (partidaId, sets, status) => {
+    // Captura a posição atual da rolagem
+    const scrollPosition = window.scrollY;
+
     try {
       // Envia os sets e o status no corpo da requisição
       await axios.patch(`${API_URL}/sorteador-duplas-bt/api/v1/partidas/${partidaId}`, {
@@ -103,14 +106,20 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
         status: "FINALIZADA",
       });
       setMensagem({ text: "Resultado salvo com sucesso!", type: "success" });
-      carregarPartidas(grupoSelecionado); // Atualiza a lista de partidas
+
+      // Recarrega as partidas
+      await carregarPartidas(grupoSelecionado);
+
+      // Restaura a posição da rolagem após um pequeno atraso
+      setTimeout(() => {
+        window.scrollTo(0, scrollPosition);
+      }, 100); // Atraso de 100ms
     } catch (error) {
       console.error("Erro ao salvar resultado:", error);
       const mensagemErro = error.response?.data || "Erro ao salvar resultado.";
       setMensagem({ text: mensagemErro, type: "error" });
     }
   };
-
 
   const abrirModalEdicao = (partida) => {
     setPartidaEditando(partida);
