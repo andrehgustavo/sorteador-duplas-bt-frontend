@@ -43,7 +43,6 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
 
   useEffect(() => {
     if (grupoSelecionado === "") {
-      console.log("Carregando todas as partidas inicialmente...");
       carregarPartidas("");
     }
   }, [grupoSelecionado]);
@@ -64,9 +63,7 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
       const url = grupoId
         ? `${API_URL}/sorteador-duplas-bt/api/v1/partidas/grupo/${grupoId}`
         : `${API_URL}/sorteador-duplas-bt/api/v1/partidas/reizinho/campeonato/${idCampeonato}`; // URL para todos os grupos
-      console.log("Carregando partidas com URL:", url); // Log para verificar a URL
       const response = await axios.get(url);
-      console.log("Partidas carregadas:", response.data); // Log para verificar as partidas carregadas
       setPartidas(response.data);
     } catch (error) {
       console.error("Erro ao carregar partidas:", error);
@@ -221,7 +218,6 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
         // Exibir todas as partidas agrupadas por grupo
         grupos.map((grupo) => {
           const partidasDoGrupo = partidas.filter((partida) => partida.grupoId === grupo.id);
-          console.log(`Grupo: ${grupo.nome}, Partidas:`, partidasDoGrupo); // Log para verificar as partidas de cada grupo
           if (partidasDoGrupo.length === 0) return null; // Não renderizar grupos sem partidas
           return (
             <Paper key={grupo.id} sx={{ p: 2, mb: 2 }}>
@@ -307,7 +303,6 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
           <Typography variant="h6" gutterBottom>
             Grupo: {grupos.find((g) => g.id === grupoSelecionado)?.nome}
           </Typography>
-          {console.log(`Grupo Selecionado: ${grupoSelecionado}, Partidas:`, partidas)} {/* Log para verificar o grupo selecionado e suas partidas */}
           <Table>
             <TableHead>
               <TableRow>

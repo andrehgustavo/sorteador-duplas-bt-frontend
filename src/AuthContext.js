@@ -22,7 +22,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await loginService(username, password); // Supondo que loginService retorne os dados do backend
       const { role, token } = response; // Extraindo o papel e o token do backend
-      console.log("Papel retornado pelo backend:", role); // Adiciona o console.log aqui
       localStorage.setItem("token", token); // Armazena o token no localStorage
       localStorage.setItem("role", role); // Armazena o papel no localStorage
       localStorage.setItem("username", username); // Armazena o nome de usuário no localStorage
@@ -44,7 +43,6 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
-      {console.log("Estado do usuário no AuthContext:", user)}
       {children}
     </AuthContext.Provider>
   );

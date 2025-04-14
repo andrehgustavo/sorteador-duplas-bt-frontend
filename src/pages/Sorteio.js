@@ -27,7 +27,6 @@ const Sorteio = ({ idCampeonato }) => {
         await axios.delete(`${API_URL}/sorteador-duplas-bt/api/v1/sorteio/${idCampeonato}/duplas`);
         setDuplas([]);
         setVisibilidade([]);
-        console.log("Todas as duplas foram apagadas com sucesso.");
       } catch (error) {
         console.error("Erro ao apagar todas as duplas:", error);
       }
