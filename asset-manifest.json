@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/sorteador-duplas-bt-frontend/static/css/main.6c4ca306.css",
-    "main.js": "/sorteador-duplas-bt-frontend/static/js/main.12ac8173.js",
+    "main.js": "/sorteador-duplas-bt-frontend/static/js/main.90b28f04.js",
     "static/js/488.45f769b6.chunk.js": "/sorteador-duplas-bt-frontend/static/js/488.45f769b6.chunk.js",
     "static/media/logo2.png": "/sorteador-duplas-bt-frontend/static/media/logo2.7c7bceb001010c794ad9.png",
     "index.html": "/sorteador-duplas-bt-frontend/index.html",
     "main.6c4ca306.css.map": "/sorteador-duplas-bt-frontend/static/css/main.6c4ca306.css.map",
-    "main.12ac8173.js.map": "/sorteador-duplas-bt-frontend/static/js/main.12ac8173.js.map",
+    "main.90b28f04.js.map": "/sorteador-duplas-bt-frontend/static/js/main.90b28f04.js.map",
     "488.45f769b6.chunk.js.map": "/sorteador-duplas-bt-frontend/static/js/488.45f769b6.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6c4ca306.css",
-    "static/js/main.12ac8173.js"
+    "static/js/main.90b28f04.js"
   ]
 }
