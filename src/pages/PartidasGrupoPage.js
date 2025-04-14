@@ -224,76 +224,79 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
               <Typography variant="h6" gutterBottom>
                 Grupo: {grupo.nome}
               </Typography>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell><strong>Dupla 1</strong></TableCell>
-                    <TableCell align="center"><strong>Games</strong></TableCell>
-                    <TableCell align="center"><strong>vs</strong></TableCell>
-                    <TableCell align="center"><strong>Games</strong></TableCell>
-                    <TableCell><strong>Dupla 2</strong></TableCell>
-                    <TableCell align="center"><strong>Ações</strong></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {partidasDoGrupo.map((partida) => (
-                    <TableRow key={partida.id}>
-                      <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla1")}>
-                        {partida.jogador1Dupla1} / {partida.jogador2Dupla1}
-                      </TableCell>
-                      <TableCell align="center">
-                        <TextField
-                          type="number"
-                          value={partida.sets[0]?.gamesDupla1 || 0}
-                          onChange={(e) =>
-                            handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla1", e.target.value)
-                          }
-                          size="small"
-                          inputProps={{ min: 0 }}
-                          disabled={partida.status !== "AGENDADA"}
-                        />
-                      </TableCell>
-                      <TableCell align="center">vs</TableCell>
-                      <TableCell align="center">
-                        <TextField
-                          type="number"
-                          value={partida.sets[0]?.gamesDupla2 || 0}
-                          onChange={(e) =>
-                            handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla2", e.target.value)
-                          }
-                          size="small"
-                          inputProps={{ min: 0 }}
-                          disabled={partida.status !== "AGENDADA"}
-                        />
-                      </TableCell>
-                      <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla2")}>
-                        {partida.jogador1Dupla2} / {partida.jogador2Dupla2}
-                      </TableCell>
-                      <TableCell align="center">
-                        {partida.status === "AGENDADA" ? (
-                          <Button
-                            variant="contained"
-                            color="success"
-                            size="small"
-                            onClick={() => salvarResultado(partida.id, partida.sets, partida.status)}
-                          >
-                            Salvar
-                          </Button>
-                        ) : partida.status === "FINALIZADA" ? (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            onClick={() => abrirModalEdicao(partida)}
-                          >
-                            Editar
-                          </Button>
-                        ) : null}
-                      </TableCell>
+              {/* Contêiner com rolagem horizontal */}
+              <Box sx={{ overflowX: "auto" }}>
+                <Table sx={{ minWidth: "600px" }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell><strong>Dupla 1</strong></TableCell>
+                      <TableCell align="center"><strong>Games</strong></TableCell>
+                      <TableCell align="center"><strong>vs</strong></TableCell>
+                      <TableCell align="center"><strong>Games</strong></TableCell>
+                      <TableCell><strong>Dupla 2</strong></TableCell>
+                      <TableCell align="center"><strong>Ações</strong></TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {partidasDoGrupo.map((partida) => (
+                      <TableRow key={partida.id}>
+                        <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla1")}>
+                          {partida.jogador1Dupla1} / {partida.jogador2Dupla1}
+                        </TableCell>
+                        <TableCell align="center">
+                          <TextField
+                            type="number"
+                            value={partida.sets[0]?.gamesDupla1 || 0}
+                            onChange={(e) =>
+                              handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla1", e.target.value)
+                            }
+                            size="small"
+                            inputProps={{ min: 0 }}
+                            disabled={partida.status !== "AGENDADA"}
+                          />
+                        </TableCell>
+                        <TableCell align="center">vs</TableCell>
+                        <TableCell align="center">
+                          <TextField
+                            type="number"
+                            value={partida.sets[0]?.gamesDupla2 || 0}
+                            onChange={(e) =>
+                              handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla2", e.target.value)
+                            }
+                            size="small"
+                            inputProps={{ min: 0 }}
+                            disabled={partida.status !== "AGENDADA"}
+                          />
+                        </TableCell>
+                        <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla2")}>
+                          {partida.jogador1Dupla2} / {partida.jogador2Dupla2}
+                        </TableCell>
+                        <TableCell align="center">
+                          {partida.status === "AGENDADA" ? (
+                            <Button
+                              variant="contained"
+                              color="success"
+                              size="small"
+                              onClick={() => salvarResultado(partida.id, partida.sets, partida.status)}
+                            >
+                              Salvar
+                            </Button>
+                          ) : partida.status === "FINALIZADA" ? (
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                              onClick={() => abrirModalEdicao(partida)}
+                            >
+                              Editar
+                            </Button>
+                          ) : null}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
             </Paper>
           );
         })
@@ -303,76 +306,79 @@ const PartidasGrupoPage = ({ idCampeonato }) => {
           <Typography variant="h6" gutterBottom>
             Grupo: {grupos.find((g) => g.id === grupoSelecionado)?.nome}
           </Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell><strong>Dupla 1</strong></TableCell>
-                <TableCell align="center"><strong>Games</strong></TableCell>
-                <TableCell align="center"><strong>vs</strong></TableCell>
-                <TableCell align="center"><strong>Games</strong></TableCell>
-                <TableCell><strong>Dupla 2</strong></TableCell>
-                <TableCell align="center"><strong>Ações</strong></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {partidas.map((partida) => (
-                <TableRow key={partida.id}>
-                  <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla1")}>
-                    {partida.jogador1Dupla1} / {partida.jogador2Dupla1}
-                  </TableCell>
-                  <TableCell align="center">
-                    <TextField
-                      type="number"
-                      value={partida.sets[0]?.gamesDupla1 || 0}
-                      onChange={(e) =>
-                        handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla1", e.target.value)
-                      }
-                      size="small"
-                      inputProps={{ min: 0 }}
-                      disabled={partida.status !== "AGENDADA"}
-                    />
-                  </TableCell>
-                  <TableCell align="center">vs</TableCell>
-                  <TableCell align="center">
-                    <TextField
-                      type="number"
-                      value={partida.sets[0]?.gamesDupla2 || 0}
-                      onChange={(e) =>
-                        handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla2", e.target.value)
-                      }
-                      size="small"
-                      inputProps={{ min: 0 }}
-                      disabled={partida.status !== "AGENDADA"}
-                    />
-                  </TableCell>
-                  <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla2")}>
-                    {partida.jogador1Dupla2} / {partida.jogador2Dupla2}
-                  </TableCell>
-                  <TableCell align="center">
-                    {partida.status === "AGENDADA" ? (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        size="small"
-                        onClick={() => salvarResultado(partida.id, partida.sets, partida.status)}
-                      >
-                        Salvar
-                      </Button>
-                    ) : partida.status === "FINALIZADA" ? (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={() => abrirModalEdicao(partida)}
-                      >
-                        Editar
-                      </Button>
-                    ) : null}
-                  </TableCell>
+          {/* Contêiner com rolagem horizontal */}
+          <Box sx={{ overflowX: "auto" }}>
+            <Table sx={{ minWidth: "600px" }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Dupla 1</strong></TableCell>
+                  <TableCell align="center"><strong>Games</strong></TableCell>
+                  <TableCell align="center"><strong>vs</strong></TableCell>
+                  <TableCell align="center"><strong>Games</strong></TableCell>
+                  <TableCell><strong>Dupla 2</strong></TableCell>
+                  <TableCell align="center"><strong>Ações</strong></TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {partidas.map((partida) => (
+                  <TableRow key={partida.id}>
+                    <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla1")}>
+                      {partida.jogador1Dupla1} / {partida.jogador2Dupla1}
+                    </TableCell>
+                    <TableCell align="center">
+                      <TextField
+                        type="number"
+                        value={partida.sets[0]?.gamesDupla1 || 0}
+                        onChange={(e) =>
+                          handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla1", e.target.value)
+                        }
+                        size="small"
+                        inputProps={{ min: 0 }}
+                        disabled={partida.status !== "AGENDADA"}
+                      />
+                    </TableCell>
+                    <TableCell align="center">vs</TableCell>
+                    <TableCell align="center">
+                      <TextField
+                        type="number"
+                        value={partida.sets[0]?.gamesDupla2 || 0}
+                        onChange={(e) =>
+                          handleGameChange(partida.id, partida.sets[0]?.id, "gamesDupla2", e.target.value)
+                        }
+                        size="small"
+                        inputProps={{ min: 0 }}
+                        disabled={partida.status !== "AGENDADA"}
+                      />
+                    </TableCell>
+                    <TableCell className={getVencedorClass(partida.sets[0]?.gamesDupla1, partida.sets[0]?.gamesDupla2, "dupla2")}>
+                      {partida.jogador1Dupla2} / {partida.jogador2Dupla2}
+                    </TableCell>
+                    <TableCell align="center">
+                      {partida.status === "AGENDADA" ? (
+                        <Button
+                          variant="contained"
+                          color="success"
+                          size="small"
+                          onClick={() => salvarResultado(partida.id, partida.sets, partida.status)}
+                        >
+                          Salvar
+                        </Button>
+                      ) : partida.status === "FINALIZADA" ? (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={() => abrirModalEdicao(partida)}
+                        >
+                          Editar
+                        </Button>
+                      ) : null}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
         </Paper>
       )}
 
